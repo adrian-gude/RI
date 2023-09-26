@@ -8,6 +8,6 @@
 from itemadapter import ItemAdapter
 
 
-class RiPipeline:
+class TripadvisorPipeline:
     def process_item(self, item, spider):
         return item
