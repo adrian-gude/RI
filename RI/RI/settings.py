@@ -1,4 +1,4 @@
-# Scrapy settings for RIWS project
+# Scrapy settings for RI project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -7,14 +7,14 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = "RIWS"
+BOT_NAME = "RI"
 
-SPIDER_MODULES = ["RIWS.spiders"]
-NEWSPIDER_MODULE = "RIWS.spiders"
+SPIDER_MODULES = ["RI.spiders"]
+NEWSPIDER_MODULE = "RI.spiders"
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = "RIWS (+http://www.yourdomain.com)"
+#USER_AGENT = "RI (+http://www.yourdomain.com)"
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -45,13 +45,13 @@ ROBOTSTXT_OBEY = True
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    "RIWS.middlewares.RiwsSpiderMiddleware": 543,
+#    "RI.middlewares.RiSpiderMiddleware": 543,
 #}
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #DOWNLOADER_MIDDLEWARES = {
-#    "RIWS.middlewares.RiwsDownloaderMiddleware": 543,
+#    "RI.middlewares.RiDownloaderMiddleware": 543,
 #}
 
 # Enable or disable extensions
@@ -63,7 +63,7 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 #ITEM_PIPELINES = {
-#    "RIWS.pipelines.RiwsPipeline": 300,
+#    "RI.pipelines.RiPipeline": 300,
 #}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
