@@ -1,12 +1,35 @@
 import scrapy
+import re
 from bs4 import BeautifulSoup
 
 class HotelsSpider(scrapy.Spider):
     name = "hotels" 
     start_urls = [
         'https://www.tripadvisor.es/Hotels-g187506-Galicia-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187506-oa30-Galicia-Hotels.html'
+        'https://www.tripadvisor.es/Hotels-g187506-oa30-Galicia-Hotels.html',
+        'https://www.tripadvisor.es/Hotels-g187506-oa60-Galicia-Hotels.html',
+        'https://www.tripadvisor.es/Hotels-g187506-oa90-Galicia-Hotels.html',
+        'https://www.tripadvisor.es/Hotels-g187506-oa120-Galicia-Hotels.html',
+        'https://www.tripadvisor.es/Hotels-g187506-oa150-Galicia-Hotels.html',
+        'https://www.tripadvisor.es/Hotels-g187506-oa180-Galicia-Hotels.html',
+        'https://www.tripadvisor.es/Hotels-g187506-oa210-Galicia-Hotels.html',
+        'https://www.tripadvisor.es/Hotels-g187506-oa240-Galicia-Hotels.html',
+        'https://www.tripadvisor.es/Hotels-g187506-oa270-Galicia-Hotels.html',
+        'https://www.tripadvisor.es/Hotels-g187506-oa300-Galicia-Hotels.html',
+        'https://www.tripadvisor.es/Hotels-g187506-oa330-Galicia-Hotels.html',
+        'https://www.tripadvisor.es/Hotels-g187506-oa360-Galicia-Hotels.html',
+        'https://www.tripadvisor.es/Hotels-g187506-oa390-Galicia-Hotels.html',
+        'https://www.tripadvisor.es/Hotels-g187506-oa420-Galicia-Hotels.html',
+        'https://www.tripadvisor.es/Hotels-g187506-oa450-Galicia-Hotels.html',
+        'https://www.tripadvisor.es/Hotels-g187506-oa480-Galicia-Hotels.html',
+        'https://www.tripadvisor.es/Hotels-g187506-oa510-Galicia-Hotels.html'
     ]
+
+
+    custom_settings = {
+        #'DOWNLOAD_DELAY':0.1,  # Establece un retraso de 2 segundos entre solicitudes
+        'LOG_LEVEL': 'INFO'
+    }
 
     def __init__(self):
         super().__init__()
@@ -33,22 +56,30 @@ class HotelsSpider(scrapy.Spider):
     def parse_hotel(self, response):
         soup = BeautifulSoup(response.text, 'html.parser')
         
-        # Aquí puedes extraer los datos del hotel, por ejemplo:
-        hotel_name = soup.find('h1', class_='QdLfr b d Pn', id='HEADING').get_text()
-        hotel_price = soup.find('div', class_='hhlrH w').get_text()
-        
-        # Puedes seguir extrayendo más datos según tus necesidades
-        
-        yield {
-            'Comunidad': 'Galicia',
-            'nombre': hotel_name,
-            'precio': hotel_price,
-            'ubicacion': '',
-            'opiniones': '',
-            'puntuacion': '',
-        }
+        try:
+            # Aquí puedes extraer los datos del hotel
+            nombre = soup.find('h1', class_='QdLfr b d Pn', id='HEADING').get_text()
+            precio = soup.find('span', class_='DJRuD Z1 _U').get_text()
+            localizacion = soup.find('span', class_='fHvkI PTrfg').get_text()
+            n_opiniones = soup.find('span', class_='qqniT').get_text()
+            n_opiniones = int(n_opiniones.replace('.', '').split(' ')[0])  # Extracción del número de opiniones
+            puntuacion = soup.find('span', class_='uwJeR P').get_text()
+            try:
+                categoria = soup.find('svg', class_='JXZuC d H0')['aria-label'][0]
+            except:
+                categoria = None
 
-    
+            yield {
+                'nombre': nombre,
+                'precio': precio,
+                'Comunidad': 'Galicia',
+                'localizacion': localizacion,
+                'n_opiniones': n_opiniones,
+                'puntuacion': puntuacion,
+                'categoria': categoria
+            }
+        except AttributeError:
+            self.logger.warning(f'No se pudo encontrar información en {response.url}')
 
         #yield {'data': hotel}
 
