@@ -1,79 +1,55 @@
 import scrapy
 from bs4 import BeautifulSoup
-  
-  
+
 class HotelsSpider(scrapy.Spider):
-    
-    # name of variable should be 'name' only
     name = "hotels" 
-  
-    # urls from which will be used to extract information
-    # list should be named 'start_urls' only
     start_urls = [
-        #'https://www.tripadvisor.es/Hotels',
-        #'https://www.tripadvisor.es/Hotels-g187506-Galicia-Hotels.html',
-        #'https://www.tripadvisor.es/Hotels-g187506-oa30-Galicia-Hotels.html',
-        'https://www.tripadvisor.es/Hotel_Review-g187508-d231702-Reviews-Gran_Hotel_Los_Abetos-Santiago_de_Compostela_Province_of_A_Coruna_Galicia.html?spAttributionToken=MjE4OTkxNTM'
+        'https://www.tripadvisor.es/Hotels-g187506-Galicia-Hotels.html',
+        'https://www.tripadvisor.es/Hotels-g187506-oa30-Galicia-Hotels.html'
     ]
 
+    def __init__(self):
+        super().__init__()
+        self.visited_urls = set()  # Conjunto para almacenar las URLs visitadas
+
     def parse(self, response):
-        soup = BeautifulSoup(response.text, 'lxml')
-
-        #lista_hoteles = soup.find_all('div', class_='NXAUb _T')
-
-        #Coger nombre y precio de un hotel:
-        datos_hotel = soup.find_all(class_='page')
-        if len(datos_hotel) > 0:
-            hotel = datos_hotel[0]
-            nombre = hotel.find('h1', class_='QdLfr b d Pn', id='HEADING')
-            precio = soup.find_all('div', class_='hhlrH w')
-            if len(precio) > 0:
-                precio = precio[0].get_text()
-                precio = precio.replace('€', '')
-                precio = precio.replace(',', '.')
-                precio = float(precio)
-
-            yield {
-                'Comunidad': 'Galicia',
-                'nombre': nombre.get_text(),
-                'precio': str(precio),
-                'ubicacion': '',
-                'opiniones': '',
-                'puntuacion': '',
-            }
-
-        #Coger nombre de un hotel de la url 'https://www.tripadvisor.es/Hotels' (creo)
-        """for hotel in lista_hoteles:
-            #Coger el nombre del hotel
-            name = hotel.find('a').get_text()
-
-            #Coger el número de ratings
-            ratingsNumberString = hotel.find_all('span', class_='reviewCount')
-            rating = ""
-            if len(ratingsNumberString) > 0:
-                rating = ratingsNumberString[0].get_text()
-                rating = rating.replace('.', '')
-                rating = rating.split(' ')
-                for ratingString in rating:
-                    if ratingString.isnumeric():
-                        rating = int(ratingString)
-                        break
-
-            #Coger la dirección del hotel
-            address = hotel.find_all('div', class_='item tags')
-            if len(address) > 0:
-                address = address[0].get_text()
-                
-
-            yield {
-                'dataType': 'spainHotels',
-                'data': {
-                    'name': hotel.get_text(),
-                    'ratings': "",
-                    'address': "",
-                }
-            }"""
+        soup = BeautifulSoup(response.text, 'html.parser')
         
+        # Obtén los enlaces a los hoteles en la página inicial
+        hotel_links = soup.select('div[data-automation="hotel-card-title"] a')
+        
+        for link in hotel_links:
+            hotel_url = link.get('href')
+            # Comprueba si el enlace es relativo y construye la URL completa
+            if not hotel_url.startswith('http'):
+                hotel_url = response.urljoin(hotel_url)
+            
+            # Verifica si la URL ya ha sido visitada
+            if hotel_url not in self.visited_urls:
+                self.visited_urls.add(hotel_url)  # Agrega la URL al conjunto de URLs visitadas
+                # Realiza la solicitud a la página del hotel y llama a una función de devolución de llamada para extraer datos
+                yield scrapy.Request(url=hotel_url, callback=self.parse_hotel)
+
+    def parse_hotel(self, response):
+        soup = BeautifulSoup(response.text, 'html.parser')
+        
+        # Aquí puedes extraer los datos del hotel, por ejemplo:
+        hotel_name = soup.find('h1', class_='QdLfr b d Pn', id='HEADING').get_text()
+        hotel_price = soup.find('div', class_='hhlrH w').get_text()
+        
+        # Puedes seguir extrayendo más datos según tus necesidades
+        
+        yield {
+            'Comunidad': 'Galicia',
+            'nombre': hotel_name,
+            'precio': hotel_price,
+            'ubicacion': '',
+            'opiniones': '',
+            'puntuacion': '',
+        }
+
+    
+
         #yield {'data': hotel}
 
 
