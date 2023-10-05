@@ -45,3 +45,9 @@ class AirlinesSpider(scrapy.Spider):
             }
 
 # Comando ejecución: scrapy crawl airlines -O airlines.json
+
+
+    #TODO borrar:
+    # Posibles páginas: https://www.tripadvisor.es/Restaurants
+    #                   https://www.tripadvisor.es/Attractions
+    #                   https://www.tripadvisor.es/Rentals

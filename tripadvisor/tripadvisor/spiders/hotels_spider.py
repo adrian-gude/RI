@@ -10,17 +10,40 @@ class HotelsSpider(scrapy.Spider):
     # urls from which will be used to extract information
     # list should be named 'start_urls' only
     start_urls = [
-        'https://www.tripadvisor.es/Hotels',
+        #'https://www.tripadvisor.es/Hotels',
         #'https://www.tripadvisor.es/Hotels-g187506-Galicia-Hotels.html',
         #'https://www.tripadvisor.es/Hotels-g187506-oa30-Galicia-Hotels.html',
+        'https://www.tripadvisor.es/Hotel_Review-g187508-d231702-Reviews-Gran_Hotel_Los_Abetos-Santiago_de_Compostela_Province_of_A_Coruna_Galicia.html?spAttributionToken=MjE4OTkxNTM'
     ]
 
     def parse(self, response):
         soup = BeautifulSoup(response.text, 'lxml')
 
-        lista_hoteles = soup.find_all('div', class_='ui_shelf_item_detail')
+        #lista_hoteles = soup.find_all('div', class_='NXAUb _T')
 
-        for hotel in lista_hoteles:
+        #Coger nombre y precio de un hotel:
+        datos_hotel = soup.find_all(class_='page')
+        if len(datos_hotel) > 0:
+            hotel = datos_hotel[0]
+            nombre = hotel.find('h1', class_='QdLfr b d Pn', id='HEADING')
+            precio = soup.find_all('div', class_='hhlrH w')
+            if len(precio) > 0:
+                precio = precio[0].get_text()
+                precio = precio.replace('€', '')
+                precio = precio.replace(',', '.')
+                precio = float(precio)
+
+            yield {
+                'Comunidad': 'Galicia',
+                'nombre': nombre.get_text(),
+                'precio': str(precio),
+                'ubicacion': '',
+                'opiniones': '',
+                'puntuacion': '',
+            }
+
+        #Coger nombre de un hotel de la url 'https://www.tripadvisor.es/Hotels' (creo)
+        """for hotel in lista_hoteles:
             #Coger el nombre del hotel
             name = hotel.find('a').get_text()
 
@@ -45,32 +68,14 @@ class HotelsSpider(scrapy.Spider):
             yield {
                 'dataType': 'spainHotels',
                 'data': {
-                    'name': name,
-                    'ratings': rating,
-                    'address': address,
-                }
-            }
-
-        """for hotel in response.css('div.ui_shelf_item_detail'):
-
-            #Se obtiene el número de ratings
-            ratingsNumberString = hotel.css('span.reviewCount::text').get()
-                #Se quitan los puntos para que números como 1.001 se detecten como 1001 (mil uno)
-            ratingsNumberString = ratingsNumberString.replace('.', '')
-            ratingsNumberStrings = ratingsNumberString.split(' ')
-            for ratingString in ratingsNumberStrings:
-                if ratingString.isnumeric():
-                    ratingsNumber = int(ratingString)
-                    break
-
-            yield {
-                'dataType': 'spainHotels',
-                'data': {
-                    'name': hotel.css('a::text').get(),
-                    'ratings': ratingsNumber,
-                    'address': hotel.css('div.item.tags::text').get(),
+                    'name': hotel.get_text(),
+                    'ratings': "",
+                    'address': "",
                 }
             }"""
+        
+        #yield {'data': hotel}
+
 
     #scrapy crawl hotels -O hotels.json
 

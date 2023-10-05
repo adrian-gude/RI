@@ -1,10 +1,3 @@
 [
-{"dataType": "spainHotels", "data": {"name": "Mandapa, a Ritz-Carlton Reserve", "ratings": 1881, "address": "Kedewatan, Indonesia"}},
-{"dataType": "spainHotels", "data": {"name": "Serras Barcelona", "ratings": 1958, "address": "Barcelona, España"}},
-{"dataType": "spainHotels", "data": {"name": "Aria Hotel Budapest by Library Hotel Collection", "ratings": 2195, "address": "Budapest, Hungría"}},
-{"dataType": "spainHotels", "data": {"name": "Turin Palace Hotel", "ratings": 3304, "address": "Turín, Italia"}},
-{"dataType": "spainHotels", "data": {"name": "Ikos Olivia", "ratings": 4433, "address": "Gerakini, Grecia"}},
-{"dataType": "spainHotels", "data": {"name": "Excellence Playa Mujeres", "ratings": 25934, "address": "Playa Mujeres, México"}},
-{"dataType": "spainHotels", "data": {"name": "Tamassa Resort", "ratings": 9278, "address": "Mauricio"}},
-{"dataType": "spainHotels", "data": {"name": "Kurumba Maldives", "ratings": 5250, "address": "Vihamanafushi"}}
+{"Comunidad": "Galicia", "nombre": "Gran Hotel Los Abetos", "precio": "94.0", "ubicacion": "", "opiniones": "", "puntuacion": ""}
 ]
