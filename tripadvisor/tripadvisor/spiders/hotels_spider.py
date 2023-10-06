@@ -1,8 +1,21 @@
 import scrapy
 import re
 from bs4 import BeautifulSoup
+from scrapy.selector import Selector
+from scrapy.loader import ItemLoader
 
 MOSTRAR_WARNINGS = False
+
+class HotelItem(scrapy.Item):
+    # define the fields for your item here like:
+    name = scrapy.Field()
+    precio = scrapy.Field()
+    localizacion = scrapy.Field()
+    n_opiniones = scrapy.Field()
+    puntuacion = scrapy.Field()
+    categoria = scrapy.Field()
+
+
 
 class HotelsSpider(scrapy.Spider):
     name = "hotels" 
@@ -79,6 +92,10 @@ class HotelsSpider(scrapy.Spider):
                 yield scrapy.Request(url=hotel_url, callback=self.parse_hotel)
 
     def parse_hotel(self, response):
+        sel = Selector(response)
+        item = ItemLoader(HotelItem(),sel)
+
+
         fields = ['nombre', 'precio', 'localizacion', 'n_opiniones', 'puntuacion', 'categoria']
         field_count = 0
         soup = BeautifulSoup(response.text, 'html.parser')
@@ -114,15 +131,16 @@ class HotelsSpider(scrapy.Spider):
             except:
                 categoria = None
 
-            yield {
-                'nombre': nombre,
-                'precio': precio,
-                'Comunidad': 'Galicia',
-                'localizacion': localizacion,
-                'n_opiniones': n_opiniones,
-                'puntuacion': puntuacion,
-                'categoria': categoria
-            }
+            item.add_value('name', nombre)
+            item.add_value('precio', precio)
+            item.add_value('localizacion',localizacion)
+            item.add_value('n_opiniones',n_opiniones)
+            item.add_value('puntuacion',puntuacion)
+            item.add_value('categoria',categoria)
+
+            yield item.load_item()
+
+            
         except AttributeError:
             if MOSTRAR_WARNINGS:
                 self.logger.warning(f'No se pudo encontrar información en {response.url} para el campo {fields[field_count]}')
