@@ -2,6 +2,8 @@ import scrapy
 import re
 from bs4 import BeautifulSoup
 
+MOSTRAR_WARNINGS = False
+
 class HotelsSpider(scrapy.Spider):
     name = "hotels" 
     start_urls = [
@@ -37,7 +39,7 @@ class HotelsSpider(scrapy.Spider):
 
 
     custom_settings = {
-        #'DOWNLOAD_DELAY':0.1,  # Establece un retraso de 2 segundos entre solicitudes
+        #'DOWNLOAD_DELAY':0.1,  # Establece un retraso entre solicitudes para evitar ser bloqueado
         'LOG_LEVEL': 'INFO'
     }
 
@@ -64,18 +66,38 @@ class HotelsSpider(scrapy.Spider):
                 yield scrapy.Request(url=hotel_url, callback=self.parse_hotel)
 
     def parse_hotel(self, response):
+        fields = ['nombre', 'precio', 'localizacion', 'n_opiniones', 'puntuacion', 'categoria']
+        field_count = 0
         soup = BeautifulSoup(response.text, 'html.parser')
         
-        try:
-            # Aquí puedes extraer los datos del hotel
+        try: #Intentamos extraer los datos del hotel
             nombre = soup.find('h1', class_='QdLfr b d Pn', id='HEADING').get_text()
-            precio = soup.find('span', class_='DJRuD Z1 _U').get_text()
+
+            field_count += 1
+            precio = None
+            clases_posibles_precio = ['DJRuD Z1 _U', 'DJRuD Z1 _U sGyzo', 'JPNOn JPNOn']
+            # Recorre las clases posibles
+            for clase in clases_posibles_precio:
+                span_element = soup.find('span', class_=clase)
+                if span_element:
+                    # Extrae el contenido del span (que debería contener el precio)
+                    precio = span_element#.text.strip()
+                    break  # Detén la búsqueda si se encuentra el elemento
+            precio = precio.get_text()
+
+            field_count += 1
             localizacion = soup.find('span', class_='fHvkI PTrfg').get_text()
+
+            field_count += 1
             n_opiniones = soup.find('span', class_='qqniT').get_text()
             n_opiniones = int(n_opiniones.replace('.', '').split(' ')[0])  # Extracción del número de opiniones
+
+            field_count += 1
             puntuacion = soup.find('span', class_='uwJeR P').get_text()
+
+            field_count += 1
             try:
-                categoria = soup.find('svg', class_='JXZuC d H0')['aria-label'][0]
+                categoria = soup.find('svg', class_='JXZuC d H0')['aria-label'][0] # Extracción de la categoría que es el número de estrellas
             except:
                 categoria = None
 
@@ -89,7 +111,8 @@ class HotelsSpider(scrapy.Spider):
                 'categoria': categoria
             }
         except AttributeError:
-            self.logger.warning(f'No se pudo encontrar información en {response.url}')
+            if MOSTRAR_WARNINGS:
+                self.logger.warning(f'No se pudo encontrar información en {response.url} para el campo {fields[field_count]}')
 
         #yield {'data': hotel}
 
