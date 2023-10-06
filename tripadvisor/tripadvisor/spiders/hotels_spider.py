@@ -1,19 +1,23 @@
 import scrapy
-import re
 from bs4 import BeautifulSoup
 from scrapy.selector import Selector
 from scrapy.loader import ItemLoader
 
-MOSTRAR_WARNINGS = False
+MOSTRAR_WARNINGS = False # Establece en True para mostrar advertencias de campos no encontrados
+SERVICIOS = ['Aparcamiento público de pago cerca', 'Wifi', 'Gimnasio / Sala de entrenamiento', 'Restaurante', 'Sauna', 'Habitaciones de no fumadores', 'Hotel de no fumadores'] # Servicios que se van a identificar en la página
+IDIOMAS = ['Español', 'Inglés', 'Francés', 'Italiano', 'Portugués'] # Idiomas que se van a identificar en la página
 
 class HotelItem(scrapy.Item):
     # define the fields for your item here like:
     name = scrapy.Field()
     precio = scrapy.Field()
+    comunidad = scrapy.Field()
     localizacion = scrapy.Field()
     n_opiniones = scrapy.Field()
     puntuacion = scrapy.Field()
     categoria = scrapy.Field()
+    idiomas = scrapy.Field()
+    servicios = scrapy.Field()
 
 
 
@@ -95,9 +99,9 @@ class HotelsSpider(scrapy.Spider):
         sel = Selector(response)
         item = ItemLoader(HotelItem(),sel)
 
-
-        fields = ['nombre', 'precio', 'localizacion', 'n_opiniones', 'puntuacion', 'categoria']
+        fields = ['nombre', 'precio', 'localizacion', 'n_opiniones', 'puntuacion', 'categoria', 'idiomas', 'servicios']
         field_count = 0
+
         soup = BeautifulSoup(response.text, 'html.parser')
         
         try: #Intentamos extraer los datos del hotel
@@ -131,20 +135,40 @@ class HotelsSpider(scrapy.Spider):
             except:
                 categoria = None
 
+            field_count += 1
+            posible_div_idiomas = soup.find_all('div', class_='euDRl _R MC S4 _a H') # Existen varios div's con la misma clase
+            idiomas = []
+            for div in posible_div_idiomas:
+                texto = div.get_text()
+                texto = texto.replace('y 1 más', '').replace(' ', '').split(',')
+                for idioma in texto:
+                    if idioma in IDIOMAS:
+                        idiomas.append(idioma)
+
+
+            field_count += 1
+            lista_servicios = soup.find_all('div', class_='yplav f ME H3 _c')
+            servicios = []
+            for servicio in lista_servicios:
+                servicio = servicio.get_text()
+                if servicio in SERVICIOS:
+                    servicios.append(servicio)
+
             item.add_value('name', nombre)
             item.add_value('precio', precio)
+            item.add_value('comunidad', 'Galicia') #TODO: Extraer comunidad
             item.add_value('localizacion',localizacion)
             item.add_value('n_opiniones',n_opiniones)
             item.add_value('puntuacion',puntuacion)
             item.add_value('categoria',categoria)
+            item.add_value('idiomas',idiomas)
+            item.add_value('servicios',servicios)
 
             yield item.load_item()
             
         except AttributeError:
             if MOSTRAR_WARNINGS:
                 self.logger.warning(f'No se pudo encontrar información en {response.url} para el campo {fields[field_count]}')
-
-        #yield {'data': hotel}
 
 
     #scrapy crawl hotels -O hotels.json
