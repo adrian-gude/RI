@@ -139,7 +139,6 @@ class HotelsSpider(scrapy.Spider):
             item.add_value('categoria',categoria)
 
             yield item.load_item()
-
             
         except AttributeError:
             if MOSTRAR_WARNINGS:
