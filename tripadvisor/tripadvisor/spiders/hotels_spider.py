@@ -2,6 +2,7 @@ import scrapy
 from bs4 import BeautifulSoup
 from scrapy.selector import Selector
 from scrapy.loader import ItemLoader
+from scrapy.loader.processors import TakeFirst
 
 MOSTRAR_WARNINGS = False # Establece en True para mostrar advertencias de campos no encontrados
 SERVICIOS = ['Aparcamiento público de pago cerca', 'Wifi', 'Gimnasio / Sala de entrenamiento', 'Restaurante', 'Sauna', 'Habitaciones de no fumadores', 'Hotel de no fumadores'] # Servicios que se van a identificar en la página
@@ -9,13 +10,13 @@ IDIOMAS = ['Español', 'Inglés', 'Francés', 'Italiano', 'Portugués'] # Idioma
 
 class HotelItem(scrapy.Item):
     # define the fields for your item here like:
-    name = scrapy.Field()
-    precio = scrapy.Field()
-    comunidad = scrapy.Field()
-    localizacion = scrapy.Field()
-    n_opiniones = scrapy.Field()
-    puntuacion = scrapy.Field()
-    categoria = scrapy.Field()
+    name = scrapy.Field(output_processor=TakeFirst())
+    precio = scrapy.Field(output_processor=TakeFirst())
+    comunidad = scrapy.Field(output_processor=TakeFirst())
+    localizacion = scrapy.Field(output_processor=TakeFirst())
+    n_opiniones = scrapy.Field(output_processor=TakeFirst())
+    puntuacion = scrapy.Field(output_processor=TakeFirst())
+    categoria = scrapy.Field(output_processor=TakeFirst())
     idiomas = scrapy.Field()
     servicios = scrapy.Field()
 
@@ -25,46 +26,46 @@ class HotelsSpider(scrapy.Spider):
     name = "hotels" 
     start_urls = [
         'https://www.tripadvisor.es/Hotels-g187506-Galicia-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187449-Asturias-Hotels.html'
-        'https://www.tripadvisor.es/Hotels-g187453-Basque_Country-Hotels.html'
-        'https://www.tripadvisor.es/Hotels-g187506-oa30-Galicia-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187506-oa60-Galicia-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187506-oa90-Galicia-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187506-oa120-Galicia-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187506-oa150-Galicia-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187506-oa180-Galicia-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187506-oa210-Galicia-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187506-oa240-Galicia-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187506-oa270-Galicia-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187506-oa300-Galicia-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187506-oa330-Galicia-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187506-oa360-Galicia-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187506-oa390-Galicia-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187506-oa420-Galicia-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187506-oa450-Galicia-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187506-oa480-Galicia-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187506-oa510-Galicia-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187449-oa30-Asturias-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187449-oa60-Asturias-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187449-oa90-Asturias-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187449-oa120-Asturias-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187449-oa150-Asturias-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187449-oa180-Asturias-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187449-oa210-Asturias-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187449-oa240-Asturias-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187449-oa270-Asturias-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187449-oa300-Asturias-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187449-oa330-Asturias-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187449-oa360-Asturias-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187449-oa390-Asturias-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187449-oa420-Asturias-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187449-oa450-Asturias-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187449-oa480-Asturias-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187506-oa510-Galicia-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187453-oa30-Basque_Country-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187453-oa60-Basque_Country-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187453-oa90-Basque_Country-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187453-oa120-Basque_Country-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187449-Asturias-Hotels.html'
+        # 'https://www.tripadvisor.es/Hotels-g187453-Basque_Country-Hotels.html'
+        # 'https://www.tripadvisor.es/Hotels-g187506-oa30-Galicia-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187506-oa60-Galicia-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187506-oa90-Galicia-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187506-oa120-Galicia-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187506-oa150-Galicia-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187506-oa180-Galicia-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187506-oa210-Galicia-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187506-oa240-Galicia-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187506-oa270-Galicia-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187506-oa300-Galicia-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187506-oa330-Galicia-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187506-oa360-Galicia-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187506-oa390-Galicia-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187506-oa420-Galicia-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187506-oa450-Galicia-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187506-oa480-Galicia-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187506-oa510-Galicia-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187449-oa30-Asturias-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187449-oa60-Asturias-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187449-oa90-Asturias-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187449-oa120-Asturias-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187449-oa150-Asturias-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187449-oa180-Asturias-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187449-oa210-Asturias-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187449-oa240-Asturias-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187449-oa270-Asturias-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187449-oa300-Asturias-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187449-oa330-Asturias-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187449-oa360-Asturias-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187449-oa390-Asturias-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187449-oa420-Asturias-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187449-oa450-Asturias-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187449-oa480-Asturias-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187506-oa510-Galicia-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187453-oa30-Basque_Country-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187453-oa60-Basque_Country-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187453-oa90-Basque_Country-Hotels.html',
+        # 'https://www.tripadvisor.es/Hotels-g187453-oa120-Basque_Country-Hotels.html',
     ]
 
 
