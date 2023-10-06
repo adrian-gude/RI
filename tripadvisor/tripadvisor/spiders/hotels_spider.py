@@ -6,6 +6,8 @@ class HotelsSpider(scrapy.Spider):
     name = "hotels" 
     start_urls = [
         'https://www.tripadvisor.es/Hotels-g187506-Galicia-Hotels.html',
+        'https://www.tripadvisor.es/Hotels-g187449-Asturias-Hotels.html'
+        'https://www.tripadvisor.es/Hotels-g187453-Basque_Country-Hotels.html'
         'https://www.tripadvisor.es/Hotels-g187506-oa30-Galicia-Hotels.html',
         'https://www.tripadvisor.es/Hotels-g187506-oa60-Galicia-Hotels.html',
         'https://www.tripadvisor.es/Hotels-g187506-oa90-Galicia-Hotels.html',
@@ -22,7 +24,15 @@ class HotelsSpider(scrapy.Spider):
         'https://www.tripadvisor.es/Hotels-g187506-oa420-Galicia-Hotels.html',
         'https://www.tripadvisor.es/Hotels-g187506-oa450-Galicia-Hotels.html',
         'https://www.tripadvisor.es/Hotels-g187506-oa480-Galicia-Hotels.html',
-        'https://www.tripadvisor.es/Hotels-g187506-oa510-Galicia-Hotels.html'
+        'https://www.tripadvisor.es/Hotels-g187506-oa510-Galicia-Hotels.html',
+        'https://www.tripadvisor.es/Hotels-g187449-oa30-Asturias-Hotels.html',
+        'https://www.tripadvisor.es/Hotels-g187449-oa60-Asturias-Hotels.html',
+        'https://www.tripadvisor.es/Hotels-g187449-oa90-Asturias-Hotels.html',
+        'https://www.tripadvisor.es/Hotels-g187449-oa120-Asturias-Hotels.html',
+        'https://www.tripadvisor.es/Hotels-g187453-oa30-Basque_Country-Hotels.html',
+        'https://www.tripadvisor.es/Hotels-g187453-oa60-Basque_Country-Hotels.html',
+        'https://www.tripadvisor.es/Hotels-g187453-oa90-Basque_Country-Hotels.html',
+        'https://www.tripadvisor.es/Hotels-g187453-oa120-Basque_Country-Hotels.html',
     ]
 
 
