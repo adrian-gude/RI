@@ -10,6 +10,7 @@ IDIOMAS = ['Español', 'Inglés', 'Francés', 'Italiano', 'Portugués'] # Idioma
 
 class HotelItem(scrapy.Item):
     # define the fields for your item here like:
+    comunidad = scrapy.Field(output_processor=TakeFirst())
     name = scrapy.Field(output_processor=TakeFirst())
     precio = scrapy.Field(output_processor=TakeFirst())
     comunidad = scrapy.Field(output_processor=TakeFirst())
@@ -19,6 +20,7 @@ class HotelItem(scrapy.Item):
     categoria = scrapy.Field(output_processor=TakeFirst())
     idiomas = scrapy.Field()
     servicios = scrapy.Field()
+   
 
 
 
@@ -79,6 +81,7 @@ class HotelsSpider(scrapy.Spider):
         self.visited_urls = set()  # Conjunto para almacenar las URLs visitadas
 
     def parse(self, response):
+        item = HotelItem()
         soup = BeautifulSoup(response.text, 'html.parser')
         
         # Obtén los enlaces a los hoteles en la página inicial
@@ -94,11 +97,18 @@ class HotelsSpider(scrapy.Spider):
             if hotel_url not in self.visited_urls:
                 self.visited_urls.add(hotel_url)  # Agrega la URL al conjunto de URLs visitadas
                 # Realiza la solicitud a la página del hotel y llama a una función de devolución de llamada para extraer datos
-                yield scrapy.Request(url=hotel_url, callback=self.parse_hotel)
+                if 'Galicia' in hotel_url : 
+                    yield scrapy.Request(url=hotel_url, callback=self.parse_hotel, cb_kwargs=dict(comunidad='Galicia'))
+                if 'Asturias' in hotel_url : 
+                    yield scrapy.Request(url=hotel_url, callback=self.parse_hotel, cb_kwargs=dict(comunidad='Asturias'))
+                if 'Basque_Country' in hotel_url : 
+                    yield scrapy.Request(url=hotel_url, callback=self.parse_hotel, cb_kwargs=dict(comunidad='País Vasco'))
 
-    def parse_hotel(self, response):
+
+    def parse_hotel(self, response,comunidad):
         sel = Selector(response)
         item = ItemLoader(HotelItem(),sel)
+
 
         fields = ['nombre', 'precio', 'localizacion', 'n_opiniones', 'puntuacion', 'categoria', 'idiomas', 'servicios']
         field_count = 0
@@ -155,6 +165,7 @@ class HotelsSpider(scrapy.Spider):
                 if servicio in SERVICIOS:
                     servicios.append(servicio)
 
+            item.add_value('comunidad',comunidad)
             item.add_value('name', nombre)
             item.add_value('precio', precio)
             item.add_value('comunidad', 'Galicia') #TODO: Extraer comunidad
@@ -164,6 +175,7 @@ class HotelsSpider(scrapy.Spider):
             item.add_value('categoria',categoria)
             item.add_value('idiomas',idiomas)
             item.add_value('servicios',servicios)
+            
 
             yield item.load_item()
             
