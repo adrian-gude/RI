@@ -63,7 +63,7 @@ class HotelsSpider(scrapy.Spider):
         # 'https://www.tripadvisor.es/Hotels-g187449-oa360-Asturias-Hotels.html',
         # 'https://www.tripadvisor.es/Hotels-g187449-oa390-Asturias-Hotels.html',
         # 'https://www.tripadvisor.es/Hotels-g187449-oa420-Asturias-Hotels.html',
-        # 'https://www.tripadvisor.es/Hotels-g187449-oa450-Asturias-Hotels.html',
+        'https://www.tripadvisor.es/Hotels-g187449-oa450-Asturias-Hotels.html',
         # 'https://www.tripadvisor.es/Hotels-g187449-oa480-Asturias-Hotels.html',
         # 'https://www.tripadvisor.es/Hotels-g187506-oa510-Galicia-Hotels.html',
         # 'https://www.tripadvisor.es/Hotels-g187453-oa30-Basque_Country-Hotels.html',
@@ -105,15 +105,16 @@ class HotelsSpider(scrapy.Spider):
                     yield scrapy.Request(url=hotel_url, callback=self.parse_hotel, cb_kwargs=dict(comunidad='Asturias'))
                 if 'Basque_Country' in hotel_url : 
                     yield scrapy.Request(url=hotel_url, callback=self.parse_hotel, cb_kwargs=dict(comunidad='País Vasco'))
+                # TODO: Añadir más comunidades autónomas
 
 
-    def parse_hotel(self, response,comunidad):
+    def parse_hotel(self, response, comunidad):
         sel = Selector(response)
         item = ItemLoader(HotelItem(),sel)
 
 
-        fields = ['nombre', 'precio', 'localizacion', 'n_opiniones', 'puntuacion', 'categoria', 'idiomas', 'servicios']
-        field_count = 0
+        fields = ['comunidad', 'nombre', 'precio', 'localizacion', 'n_opiniones', 'puntuacion', 'categoria', 'idiomas', 'servicios']
+        field_count = 1 #se empieza en el 1 porque el campo comunidad nunca debería dar error
 
         soup = BeautifulSoup(response.text, 'html.parser')
         
@@ -167,10 +168,9 @@ class HotelsSpider(scrapy.Spider):
                 if servicio in SERVICIOS:
                     servicios.append(servicio)
 
-            item.add_value('comunidad',comunidad)
+            item.add_value('comunidad', comunidad)
             item.add_value('name', nombre)
             item.add_value('precio', precio)
-            item.add_value('comunidad', 'Galicia') #TODO: Extraer comunidad
             item.add_value('localizacion',localizacion)
             item.add_value('n_opiniones',n_opiniones)
             item.add_value('puntuacion',puntuacion)
