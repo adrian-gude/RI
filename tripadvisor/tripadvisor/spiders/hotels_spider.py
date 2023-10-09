@@ -2,7 +2,8 @@ import scrapy
 from bs4 import BeautifulSoup
 from scrapy.selector import Selector
 from scrapy.loader import ItemLoader
-from scrapy.loader.processors import TakeFirst
+from itemloaders.processors import TakeFirst
+
 
 MOSTRAR_WARNINGS = False # Establece en True para mostrar advertencias de campos no encontrados
 SERVICIOS = ['Aparcamiento público de pago cerca', 'Wifi', 'Gimnasio / Sala de entrenamiento', 'Restaurante', 'Sauna', 'Habitaciones de no fumadores', 'Hotel de no fumadores'] # Servicios que se van a identificar en la página
@@ -10,14 +11,15 @@ IDIOMAS = ['Español', 'Inglés', 'Francés', 'Italiano', 'Portugués'] # Idioma
 
 class HotelItem(scrapy.Item):
     # define the fields for your item here like:
-    comunidad = scrapy.Field(output_processor=TakeFirst())
-    name = scrapy.Field(output_processor=TakeFirst())
-    precio = scrapy.Field(output_processor=TakeFirst())
-    comunidad = scrapy.Field(output_processor=TakeFirst())
-    localizacion = scrapy.Field(output_processor=TakeFirst())
-    n_opiniones = scrapy.Field(output_processor=TakeFirst())
-    puntuacion = scrapy.Field(output_processor=TakeFirst())
-    categoria = scrapy.Field(output_processor=TakeFirst())
+    
+    comunidad = scrapy.Field(output_processor = TakeFirst())
+    name = scrapy.Field(output_processor = TakeFirst())
+    precio = scrapy.Field(output_processor = TakeFirst())
+    comunidad = scrapy.Field(output_processor = TakeFirst())
+    localizacion = scrapy.Field(output_processor = TakeFirst())
+    n_opiniones = scrapy.Field(output_processor = TakeFirst())
+    puntuacion = scrapy.Field(output_processor = TakeFirst())
+    categoria = scrapy.Field(output_processor = TakeFirst())
     idiomas = scrapy.Field()
     servicios = scrapy.Field()
    
