@@ -60,12 +60,6 @@ class HotelsSpider(scrapy.Spider):
             yield scrapy.Request(url, callback=self.parse_hotel, cb_kwargs={'comunidad': comunidad})
 
     def parse_hotel(self, response, comunidad):
-        sel = Selector(response)
-        item = ItemLoader(HotelItem(), sel)
-
-        fields = ['comunidad', 'nombre', 'precio', 'localizacion', 'n_opiniones', 'puntuacion', 'categoria', 'idiomas', 'servicios']
-        field_count = 1
-
         soup = BeautifulSoup(response.text, 'html.parser')
 
         # Obtén los enlaces a los hoteles en la página inicial
