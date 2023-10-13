@@ -5,6 +5,7 @@ from scrapy.loader import ItemLoader
 from itemloaders.processors import TakeFirst
 
 MOSTRAR_WARNINGS = False
+
 SERVICIOS = ['Aparcamiento público de pago cerca', 'Wifi', 'Gimnasio / Sala de entrenamiento', 'Restaurante', 'Sauna', 'Habitaciones de no fumadores', 'Hotel de no fumadores']
 IDIOMAS = ['Español', 'Inglés', 'Francés', 'Italiano', 'Portugués']
 
@@ -34,7 +35,7 @@ class HotelsSpider(scrapy.Spider):
         ('187453', 'Basque_Country'),
         ('187519', 'Navarra'),
         ('187444', 'Aragon'),
-        ('187496', 'Catalonia'),
+        #('187496', 'Catalonia'),
         ('187490', 'Castile_and_Leon'),
         ('187511', 'La_Rioja'),
         ('187514', 'Madrid'),
@@ -42,7 +43,7 @@ class HotelsSpider(scrapy.Spider):
         ('187485', 'Castile_La_Mancha'),
         ('187521', 'Valencian_Community'),
         ('187518', 'Murcia'),
-        ('187428', 'Andalucia'),
+        #('187428', 'Andalucia'),
         ('187459', 'Balearic_Islands'),
         ('187466', 'Canary_Islands')
     ]
@@ -98,6 +99,12 @@ class HotelsSpider(scrapy.Spider):
                     precio = span_element
                     break
             precio = precio.get_text()
+            if precio is not None and precio != '':
+                precio = precio.replace('€', '').replace(',', '.').replace(' ', '')
+                if precio == '':
+                    precio = None
+                else:
+                    precio = float(precio)
 
             field_count += 1
             localizacion = soup.find('span', class_='fHvkI PTrfg').get_text()
@@ -108,10 +115,14 @@ class HotelsSpider(scrapy.Spider):
 
             field_count += 1
             puntuacion = soup.find('span', class_='uwJeR P').get_text()
+            if puntuacion is not None and puntuacion != '':
+                puntuacion = float(puntuacion.replace(',', '.'))
 
             field_count += 1
             try:
                 categoria = soup.find('svg', class_='JXZuC d H0')['aria-label'][0]
+                if categoria is not None and categoria != '':
+                    categoria = int(categoria)
             except:
                 categoria = None
 
