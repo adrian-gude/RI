@@ -6,12 +6,14 @@ from itemloaders.processors import TakeFirst
 
 MOSTRAR_WARNINGS = False
 
+# Servicios que se capturarán si el hotel los tiene
 SERVICIOS = ['Aparcamiento público de pago cerca', 'Wifi', 'Gimnasio / Sala de entrenamiento', 'Restaurante', 'Sauna', 'Habitaciones de no fumadores', 'Hotel de no fumadores']
+# Idiomas que se capturarán si el hotel los tiene
 IDIOMAS = ['Español', 'Inglés', 'Francés', 'Italiano', 'Portugués']
 
 class HotelItem(scrapy.Item):
     comunidad = scrapy.Field(output_processor=TakeFirst())
-    name = scrapy.Field(output_processor=TakeFirst())
+    nombre = scrapy.Field(output_processor=TakeFirst())
     precio = scrapy.Field(output_processor=TakeFirst())
     comunidad = scrapy.Field(output_processor=TakeFirst())
     localizacion = scrapy.Field(output_processor=TakeFirst())
@@ -29,25 +31,25 @@ class HotelsSpider(scrapy.Spider):
 
     BASE_URL = 'https://www.tripadvisor.es/Hotels-g{}-{}-Hotels.html'
     COMUNIDADES = [
-        ('187506', 'Galicia'),
-        ('187449', 'Asturias'),
-        ('187483', 'Cantabria'),
-        ('187453', 'Basque_Country'),
-        ('187519', 'Navarra'),
-        ('187444', 'Aragon'),
-        #('187496', 'Catalonia'),
-        ('187490', 'Castile_and_Leon'),
-        ('187511', 'La_Rioja'),
-        ('187514', 'Madrid'),
-        ('187505', 'Extremadura'),
-        ('187485', 'Castile_La_Mancha'),
-        ('187521', 'Valencian_Community'),
-        ('187518', 'Murcia'),
-        #('187428', 'Andalucia'),
-        ('187459', 'Balearic_Islands'),
-        ('187466', 'Canary_Islands')
+       ('187506', 'Galicia'),
+       ('187449', 'Asturias'),
+       ('187483', 'Cantabria'),
+       ('187453', 'Basque_Country'),
+       ('187519', 'Navarra'),
+       ('187444', 'Aragon'),
+       #('187496', 'Catalonia'),
+       ('187490', 'Castile_and_Leon'),
+       ('187511', 'La_Rioja'),
+       ('187514', 'Madrid'),
+       ('187505', 'Extremadura'),
+       ('187485', 'Castile_La_Mancha'),
+       ('187521', 'Valencian_Community'),
+       ('187518', 'Murcia'),
+       #('187428', 'Andalucia'),
+       ('187459', 'Balearic_Islands'),
+       ('187466', 'Canary_Islands')
     ]
-    PAGES_TO_SCRAPE = 14
+    PAGES_TO_SCRAPE = 14 # Número de páginas a scrapear por comunidad
 
     def start_requests(self):
         for code, comunidad in self.COMUNIDADES:
@@ -77,13 +79,17 @@ class HotelsSpider(scrapy.Spider):
         sel = Selector(response)
         item = ItemLoader(HotelItem(), sel)
 
+        # Campos a capturar; utilizado para mostrar warnings
         fields = ['comunidad', 'nombre', 'precio', 'localizacion', 'n_opiniones', 'puntuacion', 'categoria', 'idiomas', 'servicios']
         field_count = 1
 
         soup = BeautifulSoup(response.text, 'html.parser')
 
+        # Se usa un try para que si un campo no tiene valor se capture el error y no se registre dicho hotel
         try:
+            # Se obtiene el valor del campo nombre
             nombre = soup.find('h1', class_='QdLfr b d Pn', id='HEADING').get_text()
+
             field_count += 1
             precio = None
             clases_posibles_precio = ['DJRuD Z1 _U', 'DJRuD Z1 _U sGyzo', 'JPNOn JPNOn']
@@ -93,12 +99,10 @@ class HotelsSpider(scrapy.Spider):
                     precio = span_element
                     break
             precio = precio.get_text()
-            if precio is not None and precio != '':
-                precio = precio.replace('€', '').replace(',', '.').replace(' ', '')
-                if precio == '':
-                    precio = None
-                else:
-                    precio = float(precio)
+            if precio == '':
+                raise AttributeError
+            precio = precio.replace('€', '').replace(',', '.').replace(' ', '')
+            precio = float(precio)
 
             field_count += 1
             localizacion = soup.find('span', class_='fHvkI PTrfg').get_text()
@@ -118,11 +122,11 @@ class HotelsSpider(scrapy.Spider):
                 if categoria is not None and categoria != '':
                     categoria = int(categoria)
             except:
-                categoria = None
+                categoria = -1
 
             field_count += 1
-            posible_div_idiomas = soup.find_all('div', class_='euDRl _R MC S4 _a H')
             idiomas = []
+            posible_div_idiomas = soup.find_all('div', class_='euDRl _R MC S4 _a H')
             for div in posible_div_idiomas:
                 texto = div.get_text()
                 texto = texto.replace('y 1 más', '').replace(' ', '').split(',')
@@ -131,15 +135,16 @@ class HotelsSpider(scrapy.Spider):
                         idiomas.append(idioma)
 
             field_count += 1
-            lista_servicios = soup.find_all('div', class_='yplav f ME H3 _c')
             servicios = []
+            lista_servicios = soup.find_all('div', class_='yplav f ME H3 _c')
             for servicio in lista_servicios:
                 servicio = servicio.get_text()
                 if servicio in SERVICIOS:
                     servicios.append(servicio)
 
+            # Añade los valores a los campos
             item.add_value('comunidad', comunidad)
-            item.add_value('name', nombre)
+            item.add_value('nombre', nombre)
             item.add_value('precio', precio)
             item.add_value('localizacion', localizacion)
             item.add_value('n_opiniones', n_opiniones)
@@ -148,8 +153,34 @@ class HotelsSpider(scrapy.Spider):
             item.add_value('idiomas', idiomas)
             item.add_value('servicios', servicios)
 
-            yield item.load_item()
+            # Obtiene los valores de los campos, o None si no existen
+            comunidad = item.get_collected_values('comunidad')[0] if item.get_collected_values('comunidad') else None
+            nombre = item.get_collected_values('nombre')[0] if item.get_collected_values('nombre') else None
+            precio = item.get_collected_values('precio')[0] if item.get_collected_values('precio') else None
+            localizacion = item.get_collected_values('localizacion')[0] if item.get_collected_values('localizacion') else None
+            n_opiniones = item.get_collected_values('n_opiniones')[0] if item.get_collected_values('n_opiniones') else None
+            puntuacion = item.get_collected_values('puntuacion')[0] if item.get_collected_values('puntuacion') else None
+            categoria = item.get_collected_values('categoria')[0] if item.get_collected_values('categoria') else None
+            idiomas = item.get_collected_values('idiomas')
+            servicios = item.get_collected_values('servicios')
+
+            # Crea un diccionario con los valores individuales
+            hotel_data = {
+                'comunidad': comunidad,
+                'nombre': nombre,
+                'precio': precio,
+                'localizacion': localizacion,
+                'n_opiniones': n_opiniones,
+                'puntuacion': puntuacion,
+                'categoria': categoria,
+                'idiomas': idiomas,
+                'servicios': servicios,
+            }
+
+            yield hotel_data # Devuelve el diccionario con los valores
+            
         except AttributeError:
+            # Si no se ha podido obtener un campo, se muestra un warning si la variable MOSTRAR_WARNINGS es True
             if MOSTRAR_WARNINGS:
                 self.logger.warning(f'No se pudo encontrar información en {response.url} para el campo {fields[field_count]}')
 
