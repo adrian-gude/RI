@@ -8,4 +8,5 @@ scrapy crawl hotels -O hotels.json : para ejecutar el spyder que obtiene los dat
 Para el frontEnd :
 cd tripadvisorFront
 npm install 
+npm install @appbaseio/reactivesearch
 npm run dev 
