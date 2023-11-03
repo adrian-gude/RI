@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { ReactiveBase, ReactiveList, DataSearch } from '@appbaseio/reactivesearch';
+import { ReactiveBase, ReactiveList, DataSearch, RangeSlider} from '@appbaseio/reactivesearch';
 import './index.css';
 
 class Main extends React.Component {
@@ -16,8 +16,24 @@ class Main extends React.Component {
           placeholder="Buscar por nombre" // Mensaje del input de búsqueda
 
         />
+
+      <RangeSlider
+          componentId="PriceFilter" // Nombre del componente de filtro por rango
+          dataField="precio" // Campo por el que se va a aplicar el filtro por rango
+          title="Filtrar por Precio" // Título del filtro por rango
+          range={{
+            start: 0, 
+            end: 1100, //Pendiente de modficar 
+          }}
+          rangeLabels={{
+            start: '0 €',
+            end: '1100 €'
+          }}
+        
+        />
+
         <ReactiveList
-          react={{and:["SearchSensor"]}}
+          react={{and:["SearchSensor", "PriceFilter"]}}
           size={100}
           pagination={true}
           componentId="SearchResult"
