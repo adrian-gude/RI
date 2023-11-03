@@ -23,7 +23,7 @@ class HotelItem(scrapy.Item):
     idiomas = scrapy.Field()
     servicios = scrapy.Field()
     url = scrapy.Field(output_processor=TakeFirst())
-    hotel_completion = scrapy.Field()
+    imageUrl = scrapy.Field(output_processor=TakeFirst())
 
 class HotelsSpider(scrapy.Spider):
     name = "hotels" 
@@ -106,7 +106,6 @@ class HotelsSpider(scrapy.Spider):
                 raise AttributeError
             precio = precio.replace('€', '').replace(',', '.').replace(' ', '')
             precio = float(precio)
-            precio = str(precio)
 
             field_count += 1
             localizacion = soup.find('span', class_='fHvkI PTrfg').get_text()
@@ -114,25 +113,23 @@ class HotelsSpider(scrapy.Spider):
             field_count += 1
             n_opiniones = soup.find('span', class_='qqniT').get_text()
             n_opiniones = n_opiniones.replace('.', '').split(' ')[0]
-            #n_opiniones = int(n_opiniones)
+            n_opiniones = int(n_opiniones)
 
             field_count += 1
             puntuacion = soup.find('span', class_='uwJeR P').get_text()
             if puntuacion is not None and puntuacion != '':
                 puntuacion = puntuacion.replace(',', '.')
                 puntuacion = float(puntuacion)
-                puntuacion = str(puntuacion)
 
             field_count += 1
             try:
                 categoria = soup.find('svg', class_='JXZuC d H0')['aria-label'][0]
-                #if categoria is not None and categoria != '':
-                    #categoria = int(categoria)
+                if categoria is not None and categoria != '':
+                    categoria = int(categoria)
                 if categoria is None or categoria == '':
                     raise AttributeError
             except:
-                #categoria = -1
-                categoria = "-1"
+                categoria = -1
 
             field_count += 1
             idiomas = []
@@ -152,7 +149,7 @@ class HotelsSpider(scrapy.Spider):
                 if servicio in SERVICIOS:
                     servicios.append(servicio)
 
-            hotel_completion = idiomas + servicios + [comunidad]
+            imageUrl = ""
 
             # Añade los valores a los campos
             item.add_value('comunidad', comunidad)
@@ -165,7 +162,7 @@ class HotelsSpider(scrapy.Spider):
             item.add_value('idiomas', idiomas)
             item.add_value('servicios', servicios)
             item.add_value('url', url)
-            item.add_value('hotel_completion', hotel_completion)
+            item.add_value('imageUrl', imageUrl)
 
             # Obtiene los valores de los campos, o None si no existen
             comunidad = item.get_collected_values('comunidad')[0] if item.get_collected_values('comunidad') else None
@@ -178,7 +175,7 @@ class HotelsSpider(scrapy.Spider):
             idiomas = item.get_collected_values('idiomas')
             servicios = item.get_collected_values('servicios')
             url = item.get_collected_values('url')[0] if item.get_collected_values('url') else None
-            hotel_completion = item.get_collected_values('hotel_completion')
+            imageUrl = item.get_collected_values('imageUrl')[0] if item.get_collected_values('imageUrl') else None
 
             # Crea un diccionario con los valores individuales
             hotel_data = {
@@ -192,7 +189,7 @@ class HotelsSpider(scrapy.Spider):
                 'idiomas': idiomas,
                 'servicios': servicios,
                 'url': url,
-                'hotel_completion': hotel_completion
+                'imageUrl': imageUrl,
             }
 
             yield hotel_data # Devuelve el diccionario con los valores
