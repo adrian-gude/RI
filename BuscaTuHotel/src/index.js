@@ -11,7 +11,11 @@ import {
   SearchBox,
   MultiDataList,
   DateRange,
-  SelectedFilters,  
+  SelectedFilters,
+  RatingsFilter,
+  MultiRange,
+  MultiDropdownRange,
+  MultiDropdownList,
 } from '@appbaseio/reactivesearch';
 import './index.css';
 
@@ -31,35 +35,105 @@ class Main extends React.Component {
               margin: '10px',
             }}
           >
-            <div>
-              <MultiList
-                componentId="authorsfilter"
-                dataField="nombre"
-                title="Filter by Authors"
-                aggregationSize={5}
-              />
-            </div>
-            <SingleRange
-              componentId="ratingsfilter"
-              dataField="categoria"
-              title="Filtrar por categoría"
+            <MultiDropdownList
+              componentId="comunidad_multidropselector"
+              compoundClause="filter"
+              dataField="comunidad.keyword"
+              title="Comunidades"
+              //size={100}
+              sortBy="asc"
+              showCount={true}
+              placeholder="Comunidades"
+              showFilter={true}  
+              react={{
+                and: ['searchbox', 'comunidad_multidropselector', 'precio_multiselector', 'puntuacion_slider', 'categoria_ratingselector',
+                 'idiomas_multidropselector', 'servicios_multidropselector'],
+              }} 
+            />
+            <MultiRange
+              componentId="precio_multiselector"
+              compoundClause="filter"
+              dataField="precio"
               data={[
-                { start: 4, end: 5, label: '4 stars and up' },
-                { start: 3, end: 5, label: '3 stars and up' },
+                { start: 0, end: 50, label: '1 - 50 €' },
+                { start: 50, end: 150, label: '50 - 150 €' },
+                { start: 150, end: 500, label: '150 - 500 €' },
+                { start: 500, label: '500 € o más' },
               ]}
-              defaultValue="4 stars and up"
+              title="Precio"
+              showCheckbox={true}
+              react={{
+                and: ['searchbox', 'comunidad_multidropselector', 'precio_multiselector', 'puntuacion_slider', 'categoria_ratingselector',
+                 'idiomas_multidropselector', 'servicios_multidropselector'],
+              }}
             />
             <RangeSlider
-              dataField="n_opiniones"
-              componentId="opinion_range_slider"
+              componentId="puntuacion_slider"
+              dataField="puntuacion"
+              title="Puntuación"
               range={{
-                start: 0,
-                end: 10000,
+                start: 0.0,
+                end: 5.0,
               }}
               rangeLabels={{
                 start: '0',
-                end: '10 mil',
+                end: '5',
               }}
+              react={{
+                and: ['searchbox', 'comunidad_multidropselector', 'precio_multiselector', 'puntuacion_slider', 'categoria_ratingselector',
+                 'idiomas_multidropselector', 'servicios_multidropselector'],
+              }}
+            />
+            <RatingsFilter
+              componentId="categoria_ratingselector"
+              dataField="categoria"
+              title="Categoría"
+              data={[
+                { start: 0, end: 5, label: 'Todos' },
+                { start: 1, end: 5, label: '1 o más' },
+                { start: 2, end: 5, label: '2 o más' },
+                { start: 3, end: 5, label: '3 o más' },
+                { start: 4, end: 5, label: '4 o más' },
+                { start: 5, end: 5, label: '5' }
+              ]}
+              /*defaultValue={{
+                start: 0,
+                end: 5,
+              }}*/
+              react={{
+                and: ['searchbox', 'comunidad_multidropselector', 'precio_multiselector', 'puntuacion_slider', 'categoria_ratingselector',
+                 'idiomas_multidropselector', 'servicios_multidropselector'],
+              }}
+            />
+            <MultiDropdownList
+              componentId="idiomas_multidropselector"
+              compoundClause="filter"
+              dataField="idiomas.keyword"
+              title="Idiomas"
+              //size={100}
+              sortBy="count"
+              showCount={true}
+              placeholder="Idiomas"
+              showFilter={true}
+              react={{
+                and: ['searchbox', 'comunidad_multidropselector', 'precio_multiselector', 'puntuacion_slider', 'categoria_ratingselector',
+                 'idiomas_multidropselector', 'servicios_multidropselector'],
+              }} 
+            />
+            <MultiDropdownList
+              componentId="servicios_multidropselector"
+              compoundClause="filter"
+              dataField="servicios.keyword"
+              title="Servicios"
+              //size={100}
+              sortBy="count"
+              showCount={true}
+              placeholder="Servicios"
+              showFilter={true}
+              react={{
+                and: ['searchbox', 'comunidad_multidropselector', 'precio_multiselector', 'puntuacion_slider', 'categoria_ratingselector',
+                 'idiomas_multidropselector', 'servicios_multidropselector'],
+              }}  
             />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', width: '66%' }}>
@@ -77,21 +151,46 @@ class Main extends React.Component {
                 {
                   field: 'comunidad',
                   weight: 5,
-                },
+                }
               ]}
               placeholder="Buscar hotel"
+              autosuggest={true}
+              //enableRecentSuggestions={true}
+              //enablePopularSuggestions={true}
+              //enablePredictiveSuggestions={true}
+              react={{
+                and: ['searchbox', 'comunidad_multidropselector', 'precio_multiselector', 'puntuacion_slider', 'categoria_ratingselector',
+                 'idiomas_multidropselector', 'servicios_multidropselector'],
+              }}
             />
             <ReactiveList
               componentId="results"
               dataField="_score"
               size={6}
+              //sortBy='desc'
+              sortOptions={[ //TODO
+                {
+                  label: "Desc",
+                  dataField: "_score",
+                  sortBy: "desc"
+                },
+                {
+                  label: "Asc",
+                  dataField: "_score",
+                  sortBy: "asc"
+                }
+              ]}
+              defaultSortOption='Desc'
+              stream={true}
               pagination={true}
               react={{
-                and: ['searchbox', 'authorsfilter', 'ratingsfilter', 'opinion_range_slider'],
+                and: ['searchbox', 'comunidad_multidropselector', 'precio_multiselector', 'puntuacion_slider', 'categoria_ratingselector',
+                 'idiomas_multidropselector', 'servicios_multidropselector'],
               }}
               loader={<div>Cargando...</div>}
-              showResultStats={true}
+              showResultStats={true} //Mostrar estadísticas de resultados
               render={({ data }) => (
+                
                 <ReactiveList.ResultCardsWrapper>
                   {data.map((item) => (
                     <ResultCard key={item._id}>
@@ -102,14 +201,14 @@ class Main extends React.Component {
                         }}
                       />
                       <ResultCard.Description>
-                        {item.comunidad + ' ' + '*'.repeat(item.puntuacion)}
+                        {item.comunidad + ' ' + '*'.repeat(item.puntuacion)+'\n'}
                         {item.n_opiniones}
                       </ResultCard.Description>
                     </ResultCard>
                   ))}
                 </ReactiveList.ResultCardsWrapper>
               )}
-              renderResultStats={
+              renderResultStats={ //Definir estadísticas personalizadas de resultados
                 function(stats){
                     return (
                         `Mostrando ${stats.displayedResults} de un total de ${stats.numberOfResults} encontrados en ${stats.time} ms`
@@ -118,12 +217,26 @@ class Main extends React.Component {
             }
             />
           </div>
+          
         </div>
+        
       </ReactiveBase>
+
     );
   }
 }
 
 ReactDOM.render(<Main />, document.getElementById('root'));
+
+
+//TODO: (PENDIENTE)
+/*
+- Permitir elegir al usuario el nº de elementos por página a mostrar
+- Mejorar el diseño de la página (estilo, colores, etc.)
+- Intentar incluír un mapa con el nº de hoteles por comunidad
+- Hacer el ordenacimiento del listado, actualmente no funciona
+- Hacer que si pinchas en un hotel te lleve a su página web (haciendo uso del campo 'url)
+*/
+
 
 
