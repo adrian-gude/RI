@@ -233,6 +233,7 @@ ReactDOM.render(<Main />, document.getElementById('root'));
 /*
 - Permitir elegir al usuario el nº de elementos por página a mostrar
 - Mejorar el diseño de la página (estilo, colores, etc.)
+- Definir visualización correcta de cada hotel del listado
 - Intentar incluír un mapa con el nº de hoteles por comunidad
 - Hacer el ordenacimiento del listado, actualmente no funciona
 - Hacer que si pinchas en un hotel te lleve a su página web (haciendo uso del campo 'url)
