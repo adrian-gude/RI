@@ -236,6 +236,8 @@ ReactDOM.render(<Main />, document.getElementById('root'));
 - Intentar incluír un mapa con el nº de hoteles por comunidad
 - Hacer el ordenacimiento del listado, actualmente no funciona
 - Hacer que si pinchas en un hotel te lleve a su página web (haciendo uso del campo 'url)
+- Verificar correcto funcionamiento de los componentes, en especial el buscador
+- Comprobar que el diseño es responsive
 */
 
 
