@@ -34,24 +34,24 @@ class HotelsSpider(scrapy.Spider):
     BASE_URL = 'https://www.tripadvisor.es/Hotels-g{}-{}-Hotels.html'
     COMUNIDADES = [
        ('187506', 'Galicia', 'Galicia'),
-       ('187449', 'Asturias', 'Asturias'),
-       ('187483', 'Cantabria', 'Cantabria'),
-       ('187453', 'Basque_Country', 'Pais Vasco'),
-       ('187519', 'Navarra', 'Navarra'),
-       ('187444', 'Aragon', 'Aragon'),
-       #('187496', 'Catalonia', 'Cataluña'),
-       ('187490', 'Castile_and_Leon', 'Castilla y Leon'),
-       ('187511', 'La_Rioja', 'La Rioja'),
-       ('187514', 'Madrid', 'Madrid'),
-       ('187505', 'Extremadura', 'Extremadura'),
-       ('187485', 'Castile_La_Mancha', 'Castilla La Mancha'),
-       ('187521', 'Valencian_Community', 'Comunidad Valenciana'),
-       ('187518', 'Murcia', 'Murcia'),
-       #('187428', 'Andalucia', 'Andalucia'),
-       ('187459', 'Balearic_Islands', 'Islas Baleares'),
-       ('187466', 'Canary_Islands', 'Islas Canarias')
+       #('187449', 'Asturias', 'Asturias'),
+       #('187483', 'Cantabria', 'Cantabria'),
+       #('187453', 'Basque_Country', 'Pais Vasco'),
+       #('187519', 'Navarra', 'Navarra'),
+       #('187444', 'Aragon', 'Aragon'),
+       ##('187496', 'Catalonia', 'Cataluña'),
+       #('187490', 'Castile_and_Leon', 'Castilla y Leon'),
+       #('187511', 'La_Rioja', 'La Rioja'),
+       #('187514', 'Madrid', 'Madrid'),
+       #('187505', 'Extremadura', 'Extremadura'),
+       #('187485', 'Castile_La_Mancha', 'Castilla La Mancha'),
+       #('187521', 'Valencian_Community', 'Comunidad Valenciana'),
+       #('187518', 'Murcia', 'Murcia'),
+       ##('187428', 'Andalucia', 'Andalucia'),
+       #('187459', 'Balearic_Islands', 'Islas Baleares'),
+       #('187466', 'Canary_Islands', 'Islas Canarias')
     ]
-    PAGES_TO_SCRAPE = 14 # Número de páginas a scrapear por comunidad
+    PAGES_TO_SCRAPE = 3 # Número de páginas a scrapear por comunidad
 
     def start_requests(self):
         for code, comunidad, nombreComunidad in self.COMUNIDADES:
@@ -69,21 +69,24 @@ class HotelsSpider(scrapy.Spider):
         # Obtén los enlaces a los hoteles en la página inicial
         hotel_links = soup.select('div[data-automation="hotel-card-title"] a')
 
+        image_links = soup.select('div[data-automation="non-plus-hotel-offer-6"] img')
+        for image in image_links:
+            imageUrl= image.get('src')
+
         for link in hotel_links:
             hotel_url = link.get('href')
             if not hotel_url.startswith('http'):
                 hotel_url = response.urljoin(hotel_url)
-
             if hotel_url:
-                yield scrapy.Request(url=hotel_url, callback=self.parse_hotel_details, cb_kwargs={'comunidad': nombreComunidad})
+                yield scrapy.Request(url=hotel_url, callback=self.parse_hotel_details, cb_kwargs={'comunidad': nombreComunidad, 'imageUrl': imageUrl})
 
-    def parse_hotel_details(self, response, comunidad):
+    def parse_hotel_details(self, response, comunidad, imageUrl):
         url = response.url
         sel = Selector(response)
         item = ItemLoader(HotelItem(), sel)
 
         # Campos a capturar; utilizado para mostrar warnings
-        fields = ['comunidad', 'nombre', 'precio', 'localizacion', 'n_opiniones', 'puntuacion', 'categoria', 'idiomas', 'servicios']
+        fields = ['comunidad', 'nombre', 'precio', 'localizacion', 'n_opiniones', 'puntuacion', 'categoria', 'idiomas', 'servicios', 'imageUrl']
         field_count = 1
 
         soup = BeautifulSoup(response.text, 'html.parser')
@@ -129,7 +132,7 @@ class HotelsSpider(scrapy.Spider):
                 if categoria is None or categoria == '':
                     raise AttributeError
             except:
-                categoria = -1
+                categoria = 0
 
             field_count += 1
             idiomas = []
@@ -149,8 +152,7 @@ class HotelsSpider(scrapy.Spider):
                 if servicio in SERVICIOS:
                     servicios.append(servicio)
 
-            imageUrl = ""
-
+            
             # Añade los valores a los campos
             item.add_value('comunidad', comunidad)
             item.add_value('nombre', nombre)
