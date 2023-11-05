@@ -35,24 +35,24 @@ class HotelsSpider(scrapy.Spider):
     BASE_URL = 'https://www.tripadvisor.es/Hotels-g{}-{}-Hotels.html'
     COMUNIDADES = [
        ('187506', 'Galicia', 'Galicia'),
-       #('187449', 'Asturias', 'Asturias'),
-       #('187483', 'Cantabria', 'Cantabria'),
-       #('187453', 'Basque_Country', 'Pais Vasco'),
-       #('187519', 'Navarra', 'Navarra'),
-       #('187444', 'Aragon', 'Aragon'),
-       ##('187496', 'Catalonia', 'Cataluña'),
-       #('187490', 'Castile_and_Leon', 'Castilla y Leon'),
-       #('187511', 'La_Rioja', 'La Rioja'),
-       #('187514', 'Madrid', 'Madrid'),
-       #('187505', 'Extremadura', 'Extremadura'),
-       #('187485', 'Castile_La_Mancha', 'Castilla La Mancha'),
-       #('187521', 'Valencian_Community', 'Comunidad Valenciana'),
-       #('187518', 'Murcia', 'Murcia'),
-       ##('187428', 'Andalucia', 'Andalucia'),
-       #('187459', 'Balearic_Islands', 'Islas Baleares'),
-       #('187466', 'Canary_Islands', 'Islas Canarias')
+       ('187449', 'Asturias', 'Asturias'),
+       ('187483', 'Cantabria', 'Cantabria'),
+       ('187453', 'Basque_Country', 'Pais Vasco'),
+       ('187519', 'Navarra', 'Navarra'),
+       ('187444', 'Aragon', 'Aragon'),
+       #('187496', 'Catalonia', 'Cataluña'),
+       ('187490', 'Castile_and_Leon', 'Castilla y Leon'),
+       ('187511', 'La_Rioja', 'La Rioja'),
+       ('187514', 'Madrid', 'Madrid'),
+       ('187505', 'Extremadura', 'Extremadura'),
+       ('187485', 'Castile_La_Mancha', 'Castilla La Mancha'),
+       ('187521', 'Valencian_Community', 'Comunidad Valenciana'),
+       ('187518', 'Murcia', 'Murcia'),
+       #('187428', 'Andalucia', 'Andalucia'),
+       ('187459', 'Balearic_Islands', 'Islas Baleares'),
+       ('187466', 'Canary_Islands', 'Islas Canarias')
     ]
-    PAGES_TO_SCRAPE = 2 # Número de páginas a scrapear por comunidad
+    PAGES_TO_SCRAPE = 14 # Número de páginas a scrapear por comunidad (-1)
 
     def start_requests(self):
         for code, comunidad, nombreComunidad in self.COMUNIDADES:
@@ -61,21 +61,12 @@ class HotelsSpider(scrapy.Spider):
 
     def parse(self, response, comunidad, nombreComunidad):
         for page in range(self.PAGES_TO_SCRAPE):
-            url = response.url.replace(f'-Hotels.html', f'-oa{page * 30}-{comunidad}-Hotels.html')
-            print("PAGE: ", page)
-            print("\t\t URL: ", url)
+            url = response.url.replace(f'-{comunidad}-Hotels.html', f'-oa{page * 30}-{comunidad}-Hotels.html')
             yield scrapy.Request(url, callback=self.parse_hotel, cb_kwargs={'nombreComunidad': nombreComunidad})
 
     def parse_hotel(self, response, nombreComunidad):
-        print("\t\t AQUIIIIIIIIIIIIIIIIIII")
-
         soup = BeautifulSoup(response.text, 'html.parser')
-        #hotel_divs = soup.find_all(lambda tag: tag.name == 'div' and 'data-automation' in tag.attrs)
-        #hotel_divs = soup.find_all(lambda tag: tag.name == 'div' and tag.get('data-automation') == 'non-plus-hotel-offer-X')
-        #hotel_divs = soup.find_all(lambda tag: tag.name == 'div' and re.match(r'non-plus-hotel-offer-[1-9]|10$', tag.get('data-automation')))
         hotel_divs = soup.find_all(lambda tag: tag.name == 'div' and tag.get('data-automation') and re.match(r'non-plus-hotel-offer-[1-9]|10$', tag.get('data-automation')))
-
-        print("\t\t hotel_div_len: ", len(hotel_divs))
 
         for div in hotel_divs:
             hotel_link = div.select('div[data-automation="hotel-card-title"] a')
@@ -85,8 +76,11 @@ class HotelsSpider(scrapy.Spider):
                 if not hotel_url.startswith('http'):
                     hotel_url = response.urljoin(hotel_url)
 
-            image_link = div.select('img')
-            image_url = image_link[0].get('src')                
+            image_link = div.find_all(class_="_C")
+            if image_link:
+                image_url = image_link[0].get('src')
+            else:
+                image_url = 'https://a.loveholidays.com/horizon/public/default-hotel-img.jpg' #imagen por defecto si no se consigue obtener la imagen del hotel
 
             yield scrapy.Request(url=hotel_url, callback=self.parse_hotel_details, cb_kwargs={'comunidad': nombreComunidad, 'imageUrl': image_url})
 
