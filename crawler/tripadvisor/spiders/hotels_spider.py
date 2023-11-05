@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 from scrapy.selector import Selector
 from scrapy.loader import ItemLoader
 from itemloaders.processors import TakeFirst
+import re
 
 MOSTRAR_WARNINGS = False
 
@@ -51,7 +52,7 @@ class HotelsSpider(scrapy.Spider):
        #('187459', 'Balearic_Islands', 'Islas Baleares'),
        #('187466', 'Canary_Islands', 'Islas Canarias')
     ]
-    PAGES_TO_SCRAPE = 3 # Número de páginas a scrapear por comunidad
+    PAGES_TO_SCRAPE = 2 # Número de páginas a scrapear por comunidad
 
     def start_requests(self):
         for code, comunidad, nombreComunidad in self.COMUNIDADES:
@@ -61,24 +62,33 @@ class HotelsSpider(scrapy.Spider):
     def parse(self, response, comunidad, nombreComunidad):
         for page in range(self.PAGES_TO_SCRAPE):
             url = response.url.replace(f'-Hotels.html', f'-oa{page * 30}-{comunidad}-Hotels.html')
+            print("PAGE: ", page)
+            print("\t\t URL: ", url)
             yield scrapy.Request(url, callback=self.parse_hotel, cb_kwargs={'nombreComunidad': nombreComunidad})
 
     def parse_hotel(self, response, nombreComunidad):
+        print("\t\t AQUIIIIIIIIIIIIIIIIIII")
+
         soup = BeautifulSoup(response.text, 'html.parser')
+        #hotel_divs = soup.find_all(lambda tag: tag.name == 'div' and 'data-automation' in tag.attrs)
+        #hotel_divs = soup.find_all(lambda tag: tag.name == 'div' and tag.get('data-automation') == 'non-plus-hotel-offer-X')
+        #hotel_divs = soup.find_all(lambda tag: tag.name == 'div' and re.match(r'non-plus-hotel-offer-[1-9]|10$', tag.get('data-automation')))
+        hotel_divs = soup.find_all(lambda tag: tag.name == 'div' and tag.get('data-automation') and re.match(r'non-plus-hotel-offer-[1-9]|10$', tag.get('data-automation')))
 
-        # Obtén los enlaces a los hoteles en la página inicial
-        hotel_links = soup.select('div[data-automation="hotel-card-title"] a')
+        print("\t\t hotel_div_len: ", len(hotel_divs))
 
-        image_links = soup.select('div[data-automation="non-plus-hotel-offer-6"] img')
-        for image in image_links:
-            imageUrl= image.get('src')
+        for div in hotel_divs:
+            hotel_link = div.select('div[data-automation="hotel-card-title"] a')
+            if len(hotel_link)>0:
+                hotel_link = hotel_link[0]
+                hotel_url = hotel_link.get('href')
+                if not hotel_url.startswith('http'):
+                    hotel_url = response.urljoin(hotel_url)
 
-        for link in hotel_links:
-            hotel_url = link.get('href')
-            if not hotel_url.startswith('http'):
-                hotel_url = response.urljoin(hotel_url)
-            if hotel_url:
-                yield scrapy.Request(url=hotel_url, callback=self.parse_hotel_details, cb_kwargs={'comunidad': nombreComunidad, 'imageUrl': imageUrl})
+            image_link = div.select('img')
+            image_url = image_link[0].get('src')                
+
+            yield scrapy.Request(url=hotel_url, callback=self.parse_hotel_details, cb_kwargs={'comunidad': nombreComunidad, 'imageUrl': image_url})
 
     def parse_hotel_details(self, response, comunidad, imageUrl):
         url = response.url
