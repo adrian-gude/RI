@@ -116,7 +116,9 @@ class HotelsSpider(scrapy.Spider):
             precio = precio.get_text()
             if precio == '':
                 raise AttributeError
-            precio = precio.replace('€', '').replace(',', '.').replace(' ', '')
+            # Se elminar el símbolo de la moneda, los puntos de los miles y se reemplaza la coma decimal por un punto
+            precio = precio.replace('€', '').replace('.','').replace(',', '.').replace(' ', '')
+            precio = float(precio)
             precio = int(precio)
 
             field_count += 1
