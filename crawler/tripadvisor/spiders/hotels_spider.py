@@ -52,7 +52,7 @@ class HotelsSpider(scrapy.Spider):
        ('187459', 'Balearic_Islands', 'Islas Baleares'),
        ('187466', 'Canary_Islands', 'Islas Canarias')
     ]
-    PAGES_TO_SCRAPE = 14 # Número de páginas a scrapear por comunidad (-1)
+    PAGES_TO_SCRAPE = 15 # Número de páginas a scrapear por comunidad (-1)
 
     def start_requests(self):
         for code, comunidad, nombreComunidad in self.COMUNIDADES:
@@ -69,20 +69,25 @@ class HotelsSpider(scrapy.Spider):
         hotel_divs = soup.find_all(lambda tag: tag.name == 'div' and tag.get('data-automation') and re.match(r'non-plus-hotel-offer-[1-9]|10$', tag.get('data-automation')))
 
         for div in hotel_divs:
-            hotel_link = div.select('div[data-automation="hotel-card-title"] a')
-            if len(hotel_link)>0:
-                hotel_link = hotel_link[0]
-                hotel_url = hotel_link.get('href')
-                if not hotel_url.startswith('http'):
-                    hotel_url = response.urljoin(hotel_url)
+            try:
+                hotel_link = div.select('div[data-automation="hotel-card-title"] a')
+                if len(hotel_link)>0:
+                    hotel_link = hotel_link[0]
+                    hotel_url = hotel_link.get('href')
+                    if not hotel_url.startswith('http'):
+                        hotel_url = response.urljoin(hotel_url)
 
-            image_link = div.find_all(class_="_C")
-            if image_link:
-                image_url = image_link[0].get('src')
-            else:
-                image_url = 'https://a.loveholidays.com/horizon/public/default-hotel-img.jpg' #imagen por defecto si no se consigue obtener la imagen del hotel
+                image_link = div.find_all(class_="_C")
+                if image_link:
+                    image_url = image_link[0].get('src')
+                else:
+                    image_url = 'https://a.loveholidays.com/horizon/public/default-hotel-img.jpg' #imagen por defecto si no se consigue obtener la imagen del hotel
 
-            yield scrapy.Request(url=hotel_url, callback=self.parse_hotel_details, cb_kwargs={'comunidad': nombreComunidad, 'imageUrl': image_url})
+                yield scrapy.Request(url=hotel_url, callback=self.parse_hotel_details, cb_kwargs={'comunidad': nombreComunidad, 'imageUrl': image_url})
+            except:
+                # Si no se ha podido obtener un campo, se muestra un warning si la variable MOSTRAR_WARNINGS es True
+                if MOSTRAR_WARNINGS:
+                    self.logger.warning(f'No se pudo encontrar información de un hotel en {response.url}')
 
     def parse_hotel_details(self, response, comunidad, imageUrl):
         url = response.url
