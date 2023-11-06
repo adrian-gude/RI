@@ -117,7 +117,7 @@ class HotelsSpider(scrapy.Spider):
             if precio == '':
                 raise AttributeError
             precio = precio.replace('€', '').replace(',', '.').replace(' ', '')
-            precio = float(precio)
+            precio = int(precio)
 
             field_count += 1
             localizacion = soup.find('span', class_='fHvkI PTrfg').get_text()
@@ -222,13 +222,13 @@ class HotelsSpider(scrapy.Spider):
 
 # Así, al final pasamos de algo como esto:
 #[
-#{"comunidad": "Pais Vasco", "nombre": "nombre1", "precio": "84.0", "localizacion": "Calle X", "n_opiniones": "109", "puntuacion": "4.5", "categoria": "2", "idiomas": ["Español", "Inglés"], "servicios": ["Habitaciones de no fumadores"], "url":"ejemplo1", "hotel_completion": ["Español", "Inglés", "Habitaciones de no fumadores", "Pais Vasco"]},
-#{"comunidad": "Pais Vasco", "nombre": "nombre2, "precio": "84.0", "localizacion": "Calle Y", "n_opiniones": "109", "puntuacion": "4.5", "categoria": "2", "idiomas": ["Español", "Inglés"], "servicios": ["Hotel de no fumadores"], "url":"ejemplo2", "hotel_completion": ["Español", "Inglés", "Hotel de no fumadores", "Pais Vasco"]}
+#{"comunidad": "Pais Vasco", "nombre": "nombre1", "precio": "84", "localizacion": "Calle X", "n_opiniones": "109", "puntuacion": "4.5", "categoria": "2", "idiomas": ["Español", "Inglés"], "servicios": ["Habitaciones de no fumadores"], "url":"ejemplo1", "imageUrl": "urlImagen2"},
+#{"comunidad": "Pais Vasco", "nombre": "nombre2, "precio": "84", "localizacion": "Calle Y", "n_opiniones": "109", "puntuacion": "4.5", "categoria": "2", "idiomas": ["Español", "Inglés"], "servicios": ["Hotel de no fumadores"], "url":"ejemplo2", "imageUrl": "urlImagen2"}
 #}
 
 # A algo como esto:
 #{"create": {}}
-#{"comunidad": "Pais Vasco", "nombre": "nombre1", "precio": "84.0", "localizacion": "Calle X", "n_opiniones": "109", "puntuacion": "4.5", "categoria": "2", "idiomas": ["Español", "Inglés"], "servicios": ["Habitaciones de no fumadores"], "url":"ejemplo1", "hotel_completion": ["Español", "Inglés", "Habitaciones de no fumadores", "Pais Vasco"]}
+#{"comunidad": "Pais Vasco", "nombre": "nombre1", "precio": "84", "localizacion": "Calle X", "n_opiniones": "109", "puntuacion": "4.5", "categoria": "2", "idiomas": ["Español", "Inglés"], "servicios": ["Habitaciones de no fumadores"], "url":"ejemplo1", "imageUrl": "urlImagen2"}
 #{create: {}
-# {"comunidad": "Pais Vasco", "nombre": "nombre2, "precio": "84.0", "localizacion": "Calle Y", "n_opiniones": "109", "puntuacion": "4.5", "categoria": "2", "idiomas": ["Español", "Inglés"], "servicios": ["Hotel de no fumadores"], "url":"ejemplo2", "hotel_completion": ["Español", "Inglés", "Hotel de no fumadores", "Pais Vasco"]}
+# {"comunidad": "Pais Vasco", "nombre": "nombre2, "precio": "84", "localizacion": "Calle Y", "n_opiniones": "109", "puntuacion": "4.5", "categoria": "2", "idiomas": ["Español", "Inglés"], "servicios": ["Hotel de no fumadores"], "url":"ejemplo2", "imageUrl": "urlImagen2"}
 # 
