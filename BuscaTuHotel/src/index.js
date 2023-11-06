@@ -3,21 +3,18 @@ import ReactDOM from 'react-dom';
 import {
 	ReactiveBase,
 	DataSearch,
-	MultiList,
-	SingleRange,
 	ReactiveList,
 	ResultCard,
   RangeSlider,
-  SearchBox,
-  MultiDataList,
-  DateRange,
-  SelectedFilters,
   RatingsFilter,
   MultiRange,
-  MultiDropdownRange,
   MultiDropdownList,
 } from '@appbaseio/reactivesearch';
 import './index.css';
+
+import StarIcon from '@mui/icons-material/Star';
+import CircleIcon from '@mui/icons-material/Circle';
+//import Rating from '@mui/material/Rating';
 
 class Main extends React.Component {
   render() {
@@ -46,50 +43,36 @@ class Main extends React.Component {
               placeholder="Comunidades"
               showFilter={true}  
               react={{
-                and: ['searchbox', 'comunidad_multidropselector', 'precio_multiselector', 'puntuacion_slider', 'categoria_ratingselector',
+                and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider', 'puntuacion_ratingselector',
                  'idiomas_multidropselector', 'servicios_multidropselector'],
               }} 
             />
-            <MultiRange
-              componentId="precio_multiselector"
-              compoundClause="filter"
-              dataField="precio"
-              data={[
-                { start: 0, end: 50, label: '1 - 50 €' },
-                { start: 50, end: 150, label: '50 - 150 €' },
-                { start: 150, end: 500, label: '150 - 500 €' },
-                { start: 500, label: '500 € o más' },
-              ]}
-              title="Precio"
-              showCheckbox={true}
-              react={{
-                and: ['searchbox', 'comunidad_multidropselector', 'precio_multiselector', 'puntuacion_slider', 'categoria_ratingselector',
-                 'idiomas_multidropselector', 'servicios_multidropselector'],
-              }}
-            />
             <RangeSlider
-              componentId="puntuacion_slider"
-              dataField="puntuacion"
-              title="Puntuación"
+              componentId="precio_slider"
+              dataField="precio"
+              title="Precio"
               range={{
-                start: 0.0,
-                end: 5.0,
+                start: 0,
+                end: 1000,
               }}
               rangeLabels={{
                 start: '0',
-                end: '5',
+                end: '1000',
               }}
+              showHistogram={true}
+              showFilter={true}
               react={{
-                and: ['searchbox', 'comunidad_multidropselector', 'precio_multiselector', 'puntuacion_slider', 'categoria_ratingselector',
+                and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider', 'puntuacion_ratingselector',
                  'idiomas_multidropselector', 'servicios_multidropselector'],
               }}
             />
             <RatingsFilter
-              componentId="categoria_ratingselector"
-              dataField="categoria"
-              title="Categoría"
+              componentId="puntuacion_ratingselector"
+              dataField="puntuacion"
+              title="Puntuacion"
+              icon={<CircleIcon htmlColor="seagreen  " />}
+              dimmedIcon={<CircleIcon htmlColor='grey'/>}
               data={[
-                { start: 0, end: 5, label: 'Todos' },
                 { start: 1, end: 5, label: '1 o más' },
                 { start: 2, end: 5, label: '2 o más' },
                 { start: 3, end: 5, label: '3 o más' },
@@ -101,7 +84,27 @@ class Main extends React.Component {
                 end: 5,
               }}*/
               react={{
-                and: ['searchbox', 'comunidad_multidropselector', 'precio_multiselector', 'puntuacion_slider', 'categoria_ratingselector',
+                and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider', 'puntuacion_ratingselector',
+                 'idiomas_multidropselector', 'servicios_multidropselector'],
+              }}
+            />
+            <MultiRange
+              componentId="categoria_multiselector"
+              compoundClause="filter"
+              dataField="categoria"
+              data={[
+                //{ start: 1, end: 1, label: <StarIcon htmlColor="#F2B203"/> },
+                { start: 1, end: 1, label: '1 estrella' },
+                { start: 2, end: 2, label: '2 estrellas' },
+                { start: 3, end: 3, label: '3 estrellas'  },
+                { start: 4, end: 4, label: '4 estrellas'  },
+                { start: 5, end: 5, label: '5 estrellas'  },
+                //{ start: 5, end: 5, label: <Rating name="read-only" value={5} readOnly /> },
+              ]}
+              title="Categoria"
+              showCheckbox={true}
+              react={{
+                and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider', 'puntuacion_ratingselector',
                  'idiomas_multidropselector', 'servicios_multidropselector'],
               }}
             />
@@ -116,7 +119,7 @@ class Main extends React.Component {
               placeholder="Idiomas"
               showFilter={true}
               react={{
-                and: ['searchbox', 'comunidad_multidropselector', 'precio_multiselector', 'puntuacion_slider', 'categoria_ratingselector',
+                and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider', 'puntuacion_ratingselector',
                  'idiomas_multidropselector', 'servicios_multidropselector'],
               }} 
             />
@@ -131,7 +134,7 @@ class Main extends React.Component {
               placeholder="Servicios"
               showFilter={true}
               react={{
-                and: ['searchbox', 'comunidad_multidropselector', 'precio_multiselector', 'puntuacion_slider', 'categoria_ratingselector',
+                and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider', 'puntuacion_ratingselector',
                  'idiomas_multidropselector', 'servicios_multidropselector'],
               }}  
             />
@@ -147,10 +150,6 @@ class Main extends React.Component {
                 {
                   field: 'localizacion',
                   weight: 1,
-                },
-                {
-                  field: 'comunidad',
-                  weight: 5,
                 }
               ]}
               placeholder="Buscar hotel"
@@ -159,7 +158,7 @@ class Main extends React.Component {
               //enablePopularSuggestions={true}
               //enablePredictiveSuggestions={true}
               react={{
-                and: ['searchbox', 'comunidad_multidropselector', 'precio_multiselector', 'puntuacion_slider', 'categoria_ratingselector',
+                and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider', 'puntuacion_ratingselector',
                  'idiomas_multidropselector', 'servicios_multidropselector'],
               }}
             />
@@ -184,7 +183,7 @@ class Main extends React.Component {
               stream={true}
               pagination={true}
               react={{
-                and: ['searchbox', 'comunidad_multidropselector', 'precio_multiselector', 'puntuacion_slider', 'categoria_ratingselector',
+                and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider', 'puntuacion_ratingselector',
                  'idiomas_multidropselector', 'servicios_multidropselector'],
               }}
               loader={<div>Cargando...</div>}
