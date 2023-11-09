@@ -35,7 +35,7 @@ class Main extends React.Component {
             <MultiDropdownList
               componentId="comunidad_multidropselector"
               compoundClause="filter"
-              dataField="comunidad.keyword"
+              dataField="comunidad"
               title="Comunidades"
               //size={100}
               sortBy="asc"
@@ -111,7 +111,7 @@ class Main extends React.Component {
             <MultiDropdownList
               componentId="idiomas_multidropselector"
               compoundClause="filter"
-              dataField="idiomas.keyword"
+              dataField="idiomas"
               title="Idiomas"
               //size={100}
               sortBy="count"
@@ -126,7 +126,7 @@ class Main extends React.Component {
             <MultiDropdownList
               componentId="servicios_multidropselector"
               compoundClause="filter"
-              dataField="servicios.keyword"
+              dataField="servicios"
               title="Servicios"
               //size={100}
               sortBy="count"
