@@ -21,9 +21,7 @@ import CircleIcon from '@mui/icons-material/Circle';
 /*TODO
  - poner bien el título
  - añadir separación entre los componentes
- - arreglar ordenación
  - mejorar listado resultados
- - ¿permitir modificar elemtnos por página?
 */
 
 class Main extends React.Component {
@@ -50,7 +48,6 @@ class Main extends React.Component {
               compoundClause="filter"
               dataField="comunidad"
               title="Comunidades"
-              //size={100}
               sortBy="asc"
               showCount={true}
               placeholder="Comunidades"
@@ -163,6 +160,10 @@ class Main extends React.Component {
                 {
                   field: 'localizacion',
                   weight: 1,
+                },
+                {
+                  field: 'comunidad',
+                  weight: 5,
                 }
               ]}
               placeholder="Buscar hotel"
@@ -178,17 +179,17 @@ class Main extends React.Component {
             <ReactiveList
               componentId="results"
               dataField="_score"
-              size={6}
+              size={15}
               //sortBy='desc'
-              sortOptions={[ //TODO
+              sortOptions={[
                 {
                   label: "Desc",
-                  dataField: "_score",
+                  dataField: "puntuacion",
                   sortBy: "desc"
                 },
                 {
                   label: "Asc",
-                  dataField: "_score",
+                  dataField: "puntuacion",
                   sortBy: "asc"
                 }
               ]}
