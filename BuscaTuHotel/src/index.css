@@ -11,3 +11,19 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+
+
+
+/* Estilo del nombre de cada hotel */
+.no-link-style {
+  text-decoration: none; /* Elimina el subrayado por defecto */
+  color: inherit; /* Hereda el color del texto del contenedor */
+  cursor: pointer; /* Cambia el cursor al estilo de puntero al pasar el ratón */
+
+  /* Estilos al pasar el cursor por encima del enlace */
+  &:hover {
+    text-decoration: underline; /* Agrega un subrayado al pasar el cursor */
+  }
+}
+

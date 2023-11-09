@@ -9,12 +9,22 @@ import {
   RatingsFilter,
   MultiRange,
   MultiDropdownList,
+  RangeInput,
+  ResultList,
 } from '@appbaseio/reactivesearch';
 import './index.css';
 
 import StarIcon from '@mui/icons-material/Star';
 import CircleIcon from '@mui/icons-material/Circle';
 //import Rating from '@mui/material/Rating';
+
+/*TODO
+ - poner bien el título
+ - añadir separación entre los componentes
+ - arreglar ordenación
+ - mejorar listado resultados
+ - ¿permitir modificar elemtnos por página?
+*/
 
 class Main extends React.Component {
   render() {
@@ -23,12 +33,15 @@ class Main extends React.Component {
         app="hotels" // Nombre de tu aplicación de Elasticsearch
         url="http://localhost:9200" // URL de tu instancia de Elasticsearch
       >
+        <div style={{textAlign: 'center', marginBottom:'3%' }}>
+          Busca tu Hotel
+        </div>
         <div style={{ display: 'flex', flexDirection: 'row' }}>
           <div
             style={{
               display: 'flex',
               flexDirection: 'column',
-              width: '30%',
+              width: '24%',
               margin: '10px',
             }}
           >
@@ -43,26 +56,26 @@ class Main extends React.Component {
               placeholder="Comunidades"
               showFilter={true}  
               react={{
-                and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider', 'puntuacion_ratingselector',
+                and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider_input', 'puntuacion_ratingselector',
                  'idiomas_multidropselector', 'servicios_multidropselector'],
               }} 
             />
-            <RangeSlider
-              componentId="precio_slider"
+            <RangeInput
+              componentId="precio_slider_input"
               dataField="precio"
               title="Precio"
               range={{
                 start: 0,
-                end: 1000,
+                end: 1500,
               }}
               rangeLabels={{
                 start: '0',
-                end: '1000',
+                end: '1500',
               }}
-              showHistogram={true}
+              showHistogram={false}
               showFilter={true}
               react={{
-                and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider', 'puntuacion_ratingselector',
+                and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider_input', 'puntuacion_ratingselector',
                  'idiomas_multidropselector', 'servicios_multidropselector'],
               }}
             />
@@ -84,7 +97,7 @@ class Main extends React.Component {
                 end: 5,
               }}*/
               react={{
-                and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider', 'puntuacion_ratingselector',
+                and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider_input', 'puntuacion_ratingselector',
                  'idiomas_multidropselector', 'servicios_multidropselector'],
               }}
             />
@@ -104,7 +117,7 @@ class Main extends React.Component {
               title="Categoria"
               showCheckbox={true}
               react={{
-                and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider', 'puntuacion_ratingselector',
+                and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider_input', 'puntuacion_ratingselector',
                  'idiomas_multidropselector', 'servicios_multidropselector'],
               }}
             />
@@ -119,7 +132,7 @@ class Main extends React.Component {
               placeholder="Idiomas"
               showFilter={true}
               react={{
-                and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider', 'puntuacion_ratingselector',
+                and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider_input', 'puntuacion_ratingselector',
                  'idiomas_multidropselector', 'servicios_multidropselector'],
               }} 
             />
@@ -134,12 +147,12 @@ class Main extends React.Component {
               placeholder="Servicios"
               showFilter={true}
               react={{
-                and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider', 'puntuacion_ratingselector',
+                and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider_input', 'puntuacion_ratingselector',
                  'idiomas_multidropselector', 'servicios_multidropselector'],
               }}  
             />
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', width: '66%' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', width: '72%', marginLeft: '1.4%' }}>
             <DataSearch
               componentId="searchbox"
               dataField={[
@@ -158,7 +171,7 @@ class Main extends React.Component {
               //enablePopularSuggestions={true}
               //enablePredictiveSuggestions={true}
               react={{
-                and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider', 'puntuacion_ratingselector',
+                and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider_input', 'puntuacion_ratingselector',
                  'idiomas_multidropselector', 'servicios_multidropselector'],
               }}
             />
@@ -183,17 +196,16 @@ class Main extends React.Component {
               stream={true}
               pagination={true}
               react={{
-                and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider', 'puntuacion_ratingselector',
+                and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider_input', 'puntuacion_ratingselector',
                  'idiomas_multidropselector', 'servicios_multidropselector'],
               }}
               loader={<div>Cargando...</div>}
               showResultStats={true} //Mostrar estadísticas de resultados
               render={({ data }) => (
-                
-                <ReactiveList.ResultCardsWrapper>
+                /*<ReactiveList.ResultListWrapper>
                   {data.map((item) => (
                     <ResultCard key={item._id}>
-                      <ResultCard.Image src={item.image} />
+                      <ResultCard.Image src={item.imageUrl} />
                       <ResultCard.Title
                         dangerouslySetInnerHTML={{
                           __html: item.nombre,
@@ -205,7 +217,45 @@ class Main extends React.Component {
                       </ResultCard.Description>
                     </ResultCard>
                   ))}
-                </ReactiveList.ResultCardsWrapper>
+                </ReactiveList.ResultListWrapper>*/
+                <ReactiveList.ResultListWrapper>
+                  {data.map(item => (
+                    <ResultList key={item._id}>
+                      <ResultList.Image src={item.imageUrl} />
+                      <ResultList.Content>
+                        <ResultList.Title>
+                        <a href={item.url} target="_blank" rel="noopener noreferrer" className="no-link-style">
+                        <div className="book-title" dangerouslySetInnerHTML={{ __html: item.nombre }} />
+                      </a>
+                        </ResultList.Title>
+                        <ResultList.Description>
+                          <div className="flex column justify-space-between">
+                            <div>
+                              <span className="pub-year">
+                                {item.precio}€
+                              </span>
+                              <div className="ratings-list flex align-center">
+                                <span className="stars">
+                                  {item.categoria} estrellas
+                                </span>
+                              </div>
+                              <div className="ratings-list flex align-center">
+                                <span className="avg-rating">
+                                  {item.puntuacion}/5 - {item.n_opiniones} opiniones
+                                </span>
+                              </div>
+                            </div>
+                            <div>
+                                <span className="authors-list">
+                                  {item.localizacion}
+                                </span>
+                              </div>
+                          </div>
+                        </ResultList.Description>
+                      </ResultList.Content>
+                    </ResultList>
+                  ))}
+                </ReactiveList.ResultListWrapper>
               )}
               renderResultStats={ //Definir estadísticas personalizadas de resultados
                 function(stats){
