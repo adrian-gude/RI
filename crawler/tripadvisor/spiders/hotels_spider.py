@@ -4,8 +4,10 @@ from scrapy.selector import Selector
 from scrapy.loader import ItemLoader
 from itemloaders.processors import TakeFirst
 import re
+import time
+import random
 
-MOSTRAR_WARNINGS = False
+MOSTRAR_WARNINGS = True
 
 # Servicios que se capturarán si el hotel los tiene
 SERVICIOS = ['Aparcamiento público de pago cerca', 'Wifi', 'Gimnasio / Sala de entrenamiento', 'Restaurante', 'Sauna', 'Habitaciones de no fumadores', 'Hotel de no fumadores']
@@ -52,6 +54,60 @@ class HotelsSpider(scrapy.Spider):
        ('187459', 'Balearic_Islands', 'Islas Baleares'),
        ('187466', 'Canary_Islands', 'Islas Canarias')
     ]
+
+    IMAGENES = [
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/24/dc/23/3e/berazadi-berri.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1d/82/fb/26/icon-malabar.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0e/e9/b1/af/piscina.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2a/b0/95/08/grand-deluxe-suite.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/37/f0/6d/categoria-de-habitacion.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/26/c3/2b/ee/guest-room.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/2f/7a/d7/parador-de-cordoba.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/29/9b/18/d7/terraza-barbacoa-de-lena.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/37/a3/13/hotel-the-serras.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/9c/93/ac/vue-du-rooftop.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/23/4f/ea/73/el-cel-bar.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1d/b0/24/34/superior-corner-bedroom.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/7c/ce/c5/suite-con-jacuzzi-xarello.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/19/ee/b4/79/axel-hotel-barcelona.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/14/e5/c0/bc/hotel-praktik-rambla.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/23/63/09/e4/rosellon-exterior-image.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/29/02/8b/7a/catalonia-magdalenes.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/eb/12/8a/property-amenity.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/88/db/08/hotel-jazz-pool.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/28/91/e7/84/terraza-el-cel-de-gaudi.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/29/0a/54/80/casa-marea-la-fosca-wehost.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-s/02/2a/37/7e/universal-room.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/09/32/a6/cc/sixtytwo-hotel.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2a/80/fb/95/500313-guest-room.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/29/09/27/dd/135718-guest-room.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/14/e9/cc/fa/easyhotel-barcelona.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/24/fe/ec/80/edificio.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/dd/da/ed/exterior-view.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/28/95/10/61/guest-room.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/27/68/d5/18/exterior-view.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/29/52/59/7f/500006-guest-room.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2a/c5/ba/87/caption.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/13/d1/6d/1e/deluxe-guest-room.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/10/0e/0b/aa/patio--v17122335.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/51/0f/2d/yeah-barcelona-hostel.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1e/38/bb/75/sonder-casa-luz.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/26/52/e8/3c/fachada-catalonia-albinoni.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/09/21/a7/5a/junior-suite.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/13/a9/a7/b6/habitacion-doble.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/a0/5c/81/common-areas.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/18/dd/9e/8a/acta-voraport.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/23/af/99/9a/suite-frontal.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/72/04/5d/hotel-olivia-plaza.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/29/0a/54/80/casa-marea-la-fosca-wehost.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/04/63/45/ae/olivia-balmes-hotel.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/26/52/df/59/cataloniaavinyo-fachada.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/29/2f/6e/c6/comfort-room.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/16/d9/6e/suite-cama-matrimonio.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2a/b7/dc/a1/confort-estandard-silken.jpg?w=300&h=300&s=1",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2a/45/65/f3/hotel-cortes-rambla.jpg?w=300&h=300&s=1"
+    ]
+
     PAGES_TO_SCRAPE = 15 # Número de páginas a scrapear por comunidad (-1)
 
     def start_requests(self):
@@ -67,7 +123,7 @@ class HotelsSpider(scrapy.Spider):
     def parse_hotel(self, response, nombreComunidad):
         soup = BeautifulSoup(response.text, 'html.parser')
         hotel_divs = soup.find_all(lambda tag: tag.name == 'div' and tag.get('data-automation') and re.match(r'non-plus-hotel-offer-[1-9]|10$', tag.get('data-automation')))
-
+        
         for div in hotel_divs:
             try:
                 hotel_link = div.select('div[data-automation="hotel-card-title"] a')
@@ -76,12 +132,13 @@ class HotelsSpider(scrapy.Spider):
                     hotel_url = hotel_link.get('href')
                     if not hotel_url.startswith('http'):
                         hotel_url = response.urljoin(hotel_url)
-
+        
                 image_link = div.find_all(class_="_C")
                 if image_link:
                     image_url = image_link[0].get('src')
                 else:
-                    image_url = 'https://a.loveholidays.com/horizon/public/default-hotel-img.jpg' #imagen por defecto si no se consigue obtener la imagen del hotel
+                    image_url = random.choice(self.IMAGENES)
+
 
                 yield scrapy.Request(url=hotel_url, callback=self.parse_hotel_details, cb_kwargs={'comunidad': nombreComunidad, 'imageUrl': image_url})
             except:
