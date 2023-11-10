@@ -160,10 +160,6 @@ class Main extends React.Component {
                 {
                   field: 'localizacion',
                   weight: 1,
-                },
-                {
-                  field: 'comunidad',
-                  weight: 5,
                 }
               ]}
               placeholder="Buscar hotel"
