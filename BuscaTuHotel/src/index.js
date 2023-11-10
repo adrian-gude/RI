@@ -4,8 +4,6 @@ import {
 	ReactiveBase,
 	DataSearch,
 	ReactiveList,
-	ResultCard,
-  RangeSlider,
   RatingsFilter,
   MultiRange,
   MultiDropdownList,
@@ -18,10 +16,15 @@ import StarIcon from '@mui/icons-material/Star';
 import CircleIcon from '@mui/icons-material/Circle';
 //import Rating from '@mui/material/Rating';
 
-/*TODO
- - poner bien el título
- - añadir separación entre los componentes
- - mejorar listado resultados
+/*TODO: (PENDIENTE)
+ - mejorar listado resultados:
+    - cambiar estrellas por iconos
+    - "juntar" opiniones con estrellas (dividir la primera celda en 2)
+    - poner servicios como tags
+    - hacer coincidir los colores de los componentes: slider, puntuación y paginación
+    - centrar bien las imágenes
+ - hacer que las abreviaturas de la paginación estén en español
+ - selección de idiomas y servicios funciona como un OR y debería ser un AND
 */
 
 class Main extends React.Component {
@@ -234,7 +237,7 @@ class Main extends React.Component {
                         <ResultList.Content>
                           <ResultList.Title>
                             <div className='grid-container'>
-                              <div className='column'>
+                              <div className='column hotelNameText'>
                                 <a href={item.url} target="_blank" rel="noopener noreferrer" className="no-link-style">
                                   <div dangerouslySetInnerHTML={{ __html: item.nombre }} />
                                 </a>

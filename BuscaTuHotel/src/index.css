@@ -55,7 +55,13 @@ h1 {
   text-align: center;
 }
 
+.hotelNameText {
+  font-size: 20px;
+  font-weight: bold;
+}
+
 .priceText {
+  font-size: 24px;
   text-align: center;
   font-weight:bolder;
 }
