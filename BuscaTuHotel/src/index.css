@@ -27,3 +27,68 @@ code {
   }
 }
 
+
+.header {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #333;
+  color: #fff;
+  padding: 1em 0;
+  text-align: center;
+}
+
+h1 {
+  margin: 0;
+  font-size: 2em;
+}
+
+.header-container {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.colorFondoPrincipal {
+  background-color: #F2F2F2;
+}
+
+.center {
+  text-align: center;
+}
+
+.priceText {
+  text-align: center;
+  font-weight:bolder;
+}
+
+.hotelWrapper {
+  margin-top: 1%; /* Añade espacio inferior entre cada hotel */
+  display: flex;
+}
+
+
+
+.grid-container {
+  display: flex;
+}
+
+.column {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+.column-img {
+  flex: 0.5;
+  height: 200px;
+}
+
+.row {
+  margin-bottom: 10px;
+}
+
+/*Estilo para las imágenes*/
+.result-image {
+  max-width: 97%; /* La imagen no superará el ancho del contenedor */
+  height: auto; /* Mantiene la proporción de la imagen */
+  display: block; /* Elimina el espacio adicional por debajo de la imagen */
+}
