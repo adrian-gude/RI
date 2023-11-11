@@ -19,9 +19,16 @@ import Rating from '@mui/material/Rating';
 /*TODO: (PENDIENTE)
  - mejorar listado resultados:
     - hacer coincidir los colores de los componentes: slider, puntuación y paginación
+    - permitir ordenar también por precio
+    - Aumentar separación entre localización y servicios
     - centrar bien las imágenes
  - hacer que las abreviaturas de la paginación estén en español
  - selección de idiomas y servicios funciona como un OR y debería ser un AND
+*/
+
+//TODO: (PENDIENTE pero no indispensable)
+/*
+- Intentar incluír un mapa con el nº de hoteles por comunidad
 */
 
 class Main extends React.Component {
@@ -55,7 +62,7 @@ class Main extends React.Component {
                 title="Comunidades autónomas"
                 sortBy="asc"
                 showCount={true}
-                placeholder="Comunidades"
+                placeholder="Comunidades autónomas"
                 showFilter={true}  
                 react={{
                   and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider_input', 'puntuacion_ratingselector',
@@ -71,10 +78,6 @@ class Main extends React.Component {
                 range={{
                   start: 0,
                   end: 1500,
-                }}
-                defaultValue={{
-                  start: 50,
-                  end: 800,
                 }}
                 rangeLabels={{
                   start: '0',
@@ -93,7 +96,7 @@ class Main extends React.Component {
                 componentId="puntuacion_ratingselector"
                 dataField="puntuacion"
                 title="Valoración"
-                icon={<CircleIcon htmlColor="seagreen  " />}
+                icon={<CircleIcon htmlColor="#0B6AFF" />}
                 dimmedIcon={<CircleIcon htmlColor='grey'/>}
                 data={[
                   { start: 1, end: 5, label: '1 o más' },
@@ -193,7 +196,7 @@ class Main extends React.Component {
             <ReactiveList
               componentId="results"
               dataField="_score"
-              size={2}
+              size={1}
               //sortBy='desc'
               sortOptions={[
                 {
@@ -202,12 +205,12 @@ class Main extends React.Component {
                   sortBy: "desc"
                 },
                 {
-                  label: "Puntuación descendente", //Ordenación por la puntuación del hotel de forma descendente
+                  label: "Valoración descendente", //Ordenación por la puntuación del hotel de forma descendente
                   dataField: "puntuacion",
                   sortBy: "desc"
                 },
                 {
-                  label: "Puntuación ascendente", //Ordenación por la puntuación del hotel de forma ascendente
+                  label: "Valoración ascendente", //Ordenación por la puntuación del hotel de forma ascendente
                   dataField: "puntuacion",
                   sortBy: "asc"
                 }
@@ -302,19 +305,3 @@ class Main extends React.Component {
 }
 
 ReactDOM.render(<Main />, document.getElementById('root'));
-
-
-//TODO: (PENDIENTE)
-/*
-- Permitir elegir al usuario el nº de elementos por página a mostrar
-- Mejorar el diseño de la página (estilo, colores, etc.)
-- Definir visualización correcta de cada hotel del listado
-- Intentar incluír un mapa con el nº de hoteles por comunidad
-- Hacer el ordenacimiento del listado, actualmente no funciona
-- Hacer que si pinchas en un hotel te lleve a su página web (haciendo uso del campo 'url)
-- Verificar correcto funcionamiento de los componentes, en especial el buscador
-- Comprobar que el diseño es responsive
-*/
-
-
-
