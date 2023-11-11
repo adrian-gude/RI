@@ -20,11 +20,8 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 /*TODO: (PENDIENTE)
  - mejorar listado resultados:
-    - hacer coincidir los colores de los componentes: slider, puntuación y paginación
-    - permitir ordenar también por precio
     - Aumentar separación entre localización y servicios
     - centrar bien las imágenes
- - hacer que las abreviaturas de la paginación estén en español
  - selección de idiomas y servicios funciona como un OR y debería ser un AND
 */
 
@@ -260,6 +257,16 @@ class Main extends React.Component {
                 {
                   label: "Valoración ascendente", //Ordenación por la puntuación del hotel de forma ascendente
                   dataField: "puntuacion",
+                  sortBy: "asc"
+                },
+                {
+                  label: "Precio descendente", //Ordenación por el precio del hotel de forma ascendente
+                  dataField: "precio",
+                  sortBy: "desc"
+                },
+                {
+                  label: "Precio ascendente", //Ordenación por el precio del hotel de forma ascendente
+                  dataField: "precio",
                   sortBy: "asc"
                 }
               ]}
