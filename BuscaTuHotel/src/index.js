@@ -14,12 +14,10 @@ import './index.css';
 
 import StarIcon from '@mui/icons-material/Star';
 import CircleIcon from '@mui/icons-material/Circle';
-//import Rating from '@mui/material/Rating';
+import Rating from '@mui/material/Rating';
 
 /*TODO: (PENDIENTE)
  - mejorar listado resultados:
-    - cambiar estrellas por iconos
-    - "juntar" opiniones con estrellas (dividir la primera celda en 2)
     - poner servicios como tags
     - hacer coincidir los colores de los componentes: slider, puntuación y paginación
     - centrar bien las imágenes
@@ -34,7 +32,7 @@ class Main extends React.Component {
         app="hotels" // Nombre de tu aplicación de Elasticsearch
         url="http://localhost:9200" // URL de tu instancia de Elasticsearch
       >
-        <div style={{ textAlign: 'center'}}>
+        <div className='text-align-center'>
           <div className='header'>
               <h1>Busca tu Hotel</h1>
           </div>
@@ -95,7 +93,7 @@ class Main extends React.Component {
               <RatingsFilter
                 componentId="puntuacion_ratingselector"
                 dataField="puntuacion"
-                title="Puntuación"
+                title="Valoración"
                 icon={<CircleIcon htmlColor="seagreen  " />}
                 dimmedIcon={<CircleIcon htmlColor='grey'/>}
                 data={[
@@ -251,27 +249,29 @@ class Main extends React.Component {
                           </ResultList.Title>
                           <ResultList.Description>
                             <div className='grid-container'>
-                              <div className='column'>
-                                <span>
-                                  {item.categoria} estrellas
-                                </span>
-                              </div>
-                              <div className='column'>
-                                <span>
-                                  {item.puntuacion} - {item.n_opiniones} opiniones
-                                </span>
+                              <div className='grid-container row'>
+                                <div className='column'>
+                                  <span>
+                                    <Rating name="read-only" value={item.categoria} readOnly />
+                                  </span>
+                                </div>
+                                <div className='column text-align-end'>
+                                  <span>
+                                    {item.puntuacion} - {item.n_opiniones} opiniones
+                                  </span>
+                                </div>
                               </div>
                             </div>
-                              <div className='column'>
-                                  <span>
-                                    {item.comunidad} - {item.localizacion}
-                                  </span>
-                              </div>
-                              <div className='column'>
-                                  <span>
-                                    {item.servicios}
-                                  </span>
-                              </div>
+                            <div className='row'>
+                                <span>
+                                  {item.comunidad} - {item.localizacion}
+                                </span>
+                            </div>
+                            <div className='row'>
+                                <span>
+                                  {item.servicios}
+                                </span>
+                            </div>
                           </ResultList.Description>
                         </ResultList.Content>
                         </div>

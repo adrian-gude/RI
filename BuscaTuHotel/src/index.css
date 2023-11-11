@@ -51,8 +51,12 @@ h1 {
   background-color: #F2F2F2;
 }
 
-.center {
+.text-align-center {
   text-align: center;
+}
+
+.text-align-end {
+  text-align:end;
 }
 
 .hotelNameText {
