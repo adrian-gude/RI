@@ -15,6 +15,8 @@ import './index.css';
 //import StarIcon from '@mui/icons-material/Star';
 import CircleIcon from '@mui/icons-material/Circle';
 import Rating from '@mui/material/Rating';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 /*TODO: (PENDIENTE)
  - mejorar listado resultados:
@@ -30,6 +32,52 @@ import Rating from '@mui/material/Rating';
 /*
 - Intentar incluír un mapa con el nº de hoteles por comunidad
 */
+
+const CustomPagination = ({ setPage, currentPage, totalPages }) => {
+  totalPages = totalPages - 1;
+  //if (currentPage === 0) currentPage = 1;
+  const renderPageButtons = () => {
+    const buttons = [];
+    const maxButtonsToShow = 5;
+    const startPage = Math.max(0, Math.min(currentPage - Math.floor(maxButtonsToShow / 2), totalPages - maxButtonsToShow + 1));
+
+    for (let i = 0; i < Math.min(totalPages, maxButtonsToShow); i++) {
+      const page = startPage + i;
+      buttons.push(
+        <button
+          key={page}
+          className={`pagination-btn ${currentPage === page ? 'active' : ''}`}
+          onClick={() => setPage(page)}
+        >
+          {page+1}
+        </button>
+      );
+    }
+
+    return buttons;
+  };
+
+  return (
+    <div className="pagination-container">
+      <button className="pagination-btn" onClick={() => setPage(currentPage - 1)} disabled={currentPage === 0}>
+        <ArrowBackIcon/>
+      </button>
+      <button className="pagination-btn" onClick={() => setPage(0)} disabled={currentPage === 0}>
+        1
+      </button>
+      <span style={{margin:"0 10px"}}>...</span>
+      {renderPageButtons()}
+      <span style={{margin:"0 10px"}}>...</span>
+      <button className="pagination-btn" onClick={() => setPage(totalPages)} disabled={currentPage === totalPages}>
+        {totalPages+1}
+      </button>
+      <button className="pagination-btn" onClick={() => setPage(currentPage + 1)} disabled={currentPage === totalPages}>
+        <ArrowForwardIcon/>
+      </button>
+    </div>
+  );
+};
+
 
 class Main extends React.Component {
   render() {
@@ -196,7 +244,7 @@ class Main extends React.Component {
             <ReactiveList
               componentId="results"
               dataField="_score"
-              size={1}
+              size={15}
               //sortBy='desc'
               sortOptions={[
                 {
@@ -219,6 +267,7 @@ class Main extends React.Component {
               stream={true}
               pagination={true}
               paginationAt='bottom'
+              renderPagination={(props) => <CustomPagination {...props} />} //Paginación personalizada
               react={{
                 and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider_input', 'puntuacion_ratingselector',
                  'idiomas_multidropselector', 'servicios_multidropselector'],
