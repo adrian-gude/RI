@@ -7,7 +7,7 @@ import re
 import time
 import random
 
-MOSTRAR_WARNINGS = True
+MOSTRAR_WARNINGS = False
 
 # Servicios que se capturarán si el hotel los tiene
 SERVICIOS = ['Aparcamiento público de pago cerca', 'Wifi', 'Gimnasio / Sala de entrenamiento', 'Restaurante', 'Sauna', 'Habitaciones de no fumadores', 'Hotel de no fumadores']
@@ -268,26 +268,3 @@ class HotelsSpider(scrapy.Spider):
             # Si no se ha podido obtener un campo, se muestra un warning si la variable MOSTRAR_WARNINGS es True
             if MOSTRAR_WARNINGS:
                 self.logger.warning(f'No se pudo encontrar información en {response.url} para el campo {fields[field_count]}')
-
-
-#Comando para ejecutar el spyder:
-    #scrapy crawl hotels -O hotels.json
-
-### Pasos posteriores a la ejecución del spyder con objetivo de construír un archivo válido para incluír en el índice:
-# 1. Abrir el archivo hotels.json y eliminar la primera y última línea, que son "[" y "]"
-# 2. Eliminar las comas que hay al final de cada línea y que están separando cada hotel
-# 3. Añadir "{create: {}}" una vez por cada hotel
-# 4. Añadir/comprobar que haya una línea en blanco al final del archivo
-
-# Así, al final pasamos de algo como esto:
-#[
-#{"comunidad": "Pais Vasco", "nombre": "nombre1", "precio": "84", "localizacion": "Calle X", "n_opiniones": "109", "puntuacion": "4.5", "categoria": "2", "idiomas": ["Español", "Inglés"], "servicios": ["Habitaciones de no fumadores"], "url":"ejemplo1", "imageUrl": "urlImagen2"},
-#{"comunidad": "Pais Vasco", "nombre": "nombre2, "precio": "84", "localizacion": "Calle Y", "n_opiniones": "109", "puntuacion": "4.5", "categoria": "2", "idiomas": ["Español", "Inglés"], "servicios": ["Hotel de no fumadores"], "url":"ejemplo2", "imageUrl": "urlImagen2"}
-#}
-
-# A algo como esto:
-#{"create": {}}
-#{"comunidad": "Pais Vasco", "nombre": "nombre1", "precio": "84", "localizacion": "Calle X", "n_opiniones": "109", "puntuacion": "4.5", "categoria": "2", "idiomas": ["Español", "Inglés"], "servicios": ["Habitaciones de no fumadores"], "url":"ejemplo1", "imageUrl": "urlImagen2"}
-#{create: {}
-# {"comunidad": "Pais Vasco", "nombre": "nombre2, "precio": "84", "localizacion": "Calle Y", "n_opiniones": "109", "puntuacion": "4.5", "categoria": "2", "idiomas": ["Español", "Inglés"], "servicios": ["Hotel de no fumadores"], "url":"ejemplo2", "imageUrl": "urlImagen2"}
-# 
