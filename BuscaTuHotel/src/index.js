@@ -12,7 +12,6 @@ import {
 } from '@appbaseio/reactivesearch';
 import './index.css';
 
-//import StarIcon from '@mui/icons-material/Star';
 import CircleIcon from '@mui/icons-material/Circle';
 import Rating from '@mui/material/Rating';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -20,9 +19,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 /*TODO: (PENDIENTE)
  - mejorar listado resultados:
-    - Aumentar separación entre localización y servicios
     - centrar bien las imágenes
- - selección de idiomas y servicios funciona como un OR y debería ser un AND
 */
 
 //TODO: (PENDIENTE pero no indispensable)
@@ -189,6 +186,7 @@ class Main extends React.Component {
                 showCount={true}
                 placeholder="Idiomas"
                 showFilter={true}
+                queryFormat='and'
                 react={{
                   and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider_input', 'puntuacion_ratingselector',
                   'idiomas_multidropselector', 'servicios_multidropselector'],
@@ -206,6 +204,7 @@ class Main extends React.Component {
                 showCount={true}
                 placeholder="Servicios"
                 showFilter={true}
+                queryFormat='and'
                 react={{
                   and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider_input', 'puntuacion_ratingselector',
                   'idiomas_multidropselector', 'servicios_multidropselector'],
@@ -280,7 +279,7 @@ class Main extends React.Component {
                  'idiomas_multidropselector', 'servicios_multidropselector'],
               }}
               loader={<div>Cargando...</div>}
-              showResultStats={true} //Mostrar estadísticas de resultados
+              showResultStats={true} //Para mostrar estadísticas de resultados
               render={({ data }) => (
                 <ReactiveList.ResultListWrapper>
                   {data.map(item => (
@@ -325,14 +324,14 @@ class Main extends React.Component {
                                   {item.comunidad} - {item.localizacion}
                                 </span>
                             </div>
-                            <div className='row'>
-                            <div className="tags-container">
-                              {item.servicios.map((tag, index) => (
-                                <div key={index} className="tag">
-                                  {tag}
-                                </div>
-                              ))}
-                            </div>
+                            <div className='tags-row'>
+                              <div className="tags-container">
+                                {item.servicios.map((tag, index) => (
+                                  <div key={index} className="tag">
+                                    {tag}
+                                  </div>
+                                ))}
+                              </div>
                             </div>
                           </ResultList.Description>
                         </ResultList.Content>

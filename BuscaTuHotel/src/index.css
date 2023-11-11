@@ -96,6 +96,10 @@ h1 {
   margin-bottom: 10px;
 }
 
+.tags-row {
+  margin-top: 15px;
+}
+
 /*Estilo para las imágenes*/
 .result-image {
   max-width: 97%; /* La imagen no superará el ancho del contenedor */
