@@ -1,0 +1,49 @@
+{
+    "properties": {
+        "comunidad": {
+            "type": "keyword",
+            "index": "true"
+        },
+
+        "nombre": {
+            "type": "text",
+            "index": "true"
+        },
+        "precio": {
+            "type": "integer",
+            "index": "true"
+        },
+        "localizacion": {
+            "type": "text",
+            "index": "true"
+        },
+        "n_opiniones": {
+            "type": "integer",
+            "index": "true"
+        },
+        "puntuacion": {
+            "type": "float",
+            "index": "true"
+        },
+        "categoria": {
+            "type": "integer",
+            "index": "true"
+        },
+        "idiomas": {
+            "type": "keyword",
+            "index": "true"
+        },
+        "servicios": {
+            "type": "keyword",
+            "index": "true"
+        },
+        "url": {
+            "type": "text",
+            "index": "true"
+        },
+        "imageUrl": {
+            "type": "text",
+            "index": "true"
+        }
+    }
+ }
