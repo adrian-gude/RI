@@ -12,13 +12,12 @@ import {
 } from '@appbaseio/reactivesearch';
 import './index.css';
 
-import StarIcon from '@mui/icons-material/Star';
+//import StarIcon from '@mui/icons-material/Star';
 import CircleIcon from '@mui/icons-material/Circle';
 import Rating from '@mui/material/Rating';
 
 /*TODO: (PENDIENTE)
  - mejorar listado resultados:
-    - poner servicios como tags
     - hacer coincidir los colores de los componentes: slider, puntuación y paginación
     - centrar bien las imágenes
  - hacer que las abreviaturas de la paginación estén en español
@@ -194,7 +193,7 @@ class Main extends React.Component {
             <ReactiveList
               componentId="results"
               dataField="_score"
-              size={15}
+              size={2}
               //sortBy='desc'
               sortOptions={[
                 {
@@ -268,9 +267,13 @@ class Main extends React.Component {
                                 </span>
                             </div>
                             <div className='row'>
-                                <span>
-                                  {item.servicios}
-                                </span>
+                            <div className="tags-container">
+                              {item.servicios.map((tag, index) => (
+                                <div key={index} className="tag">
+                                  {tag}
+                                </div>
+                              ))}
+                            </div>
                             </div>
                           </ResultList.Description>
                         </ResultList.Content>

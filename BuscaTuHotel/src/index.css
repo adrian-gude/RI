@@ -102,3 +102,30 @@ h1 {
   height: auto; /* Mantiene la proporción de la imagen */
   display: block; /* Elimina el espacio adicional por debajo de la imagen */
 }
+
+
+
+/* Estilos para el contenedor de etiquetas */
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px; /* Espacio entre etiquetas */
+}
+
+/* Estilos para cada etiqueta individual */
+.tag {
+  background-color: #007BFF; /* Color de fondo */
+  color: #FFFFFF; /* Color del texto */
+  padding: 6px 10px; /* Espaciado interno */
+  border-radius: 50px; /* Bordes redondeados */
+  cursor: pointer; /* Cambia el cursor al pasar sobre la etiqueta */
+  transition: background-color 0.3s ease; /* Efecto de transición para el color de fondo */
+
+  /* Otros estilos opcionales */
+  /* Puedes agregar sombra, bordes adicionales u otros estilos según tus preferencias */
+}
+
+/* Cambio de color al pasar el ratón sobre la etiqueta */
+.tag:hover {
+  background-color: #0056b3; /* Nuevo color de fondo al pasar el ratón */
+}
