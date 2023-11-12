@@ -173,24 +173,21 @@ class Main extends React.Component {
               />
             </div>
             <div className='lateralComponentsMargin'>
-              <RangeInput
-                componentId="n_opiniones_slider_input"
-                dataField="n_opiniones"
-                title="Número de opiniones"
-                range={{
-                  start: 0,
-                  end: 20000,
-                }}
-                rangeLabels={{
-                  start: '0',
-                  end: '20000',
-                }}
-                showHistogram={false}
+              <MultiDropdownList
+                componentId="servicios_multidropselector"
+                compoundClause="filter"
+                dataField="servicios"
+                title="Servicios"
+                //size={100}
+                sortBy="count"
+                showCount={true}
+                placeholder="Servicios"
                 showFilter={true}
+                queryFormat='and'
                 react={{
                   and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider_input', 'puntuacion_ratingselector',
                   'n_opiniones_slider_input', 'idiomas_multidropselector', 'servicios_multidropselector'],
-                }}
+                }}  
               />
             </div>
             <div className='lateralComponentsMargin'>
@@ -212,21 +209,24 @@ class Main extends React.Component {
               />
             </div>
             <div className='lateralComponentsMargin'>
-              <MultiDropdownList
-                componentId="servicios_multidropselector"
-                compoundClause="filter"
-                dataField="servicios"
-                title="Servicios"
-                //size={100}
-                sortBy="count"
-                showCount={true}
-                placeholder="Servicios"
+              <RangeInput
+                componentId="n_opiniones_slider_input"
+                dataField="n_opiniones"
+                title="Número de opiniones"
+                range={{
+                  start: 0,
+                  end: 20000,
+                }}
+                rangeLabels={{
+                  start: '0',
+                  end: '20000',
+                }}
+                showHistogram={false}
                 showFilter={true}
-                queryFormat='and'
                 react={{
                   and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider_input', 'puntuacion_ratingselector',
                   'n_opiniones_slider_input', 'idiomas_multidropselector', 'servicios_multidropselector'],
-                }}  
+                }}
               />
             </div>
           </div>
@@ -326,8 +326,10 @@ class Main extends React.Component {
                             <div className='grid-container'>
                               <div className='grid-container subcolumn'>
                                 <div className='column'>
-                                  <span>
+                                  <span style={{ fontStyle: item.categoria === 0 ? 'italic' : 'normal' }}>
+                                    {item.categoria === 0 ? 'Categoría no disponible' : (
                                     <Rating name="read-only" value={item.categoria} readOnly />
+                                    )}
                                   </span>
                                 </div>
                                 <div className='column'>

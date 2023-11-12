@@ -62,12 +62,15 @@ h1 {
 .hotelNameText {
   font-size: 20px;
   font-weight: bold;
+  margin-top: 10px;
+  margin-left: 6px;
 }
 
 .priceText {
   font-size: 24px;
   text-align: center;
   font-weight:bolder;
+  margin-top: 10px;
 }
 
 .hotelWrapper {
@@ -82,7 +85,10 @@ h1 {
 
 .grid-container {
   display: flex;
+  margin-left: 6px;
+  margin-top: 1px;
 }
+
 
 .column {
   flex: 1;
@@ -105,10 +111,11 @@ h1 {
 
 .row {
   margin-bottom: 10px;
+  margin-left: 12px;
 }
 
 .tags-row {
-  margin-top: 15px;
+  margin-top: 12px;
 }
 
 
@@ -118,6 +125,7 @@ h1 {
   display: flex;
   flex-wrap: wrap;
   gap: 8px; /* Espacio entre etiquetas */
+  margin-left: 10px;
 }
 
 /* Estilos para cada etiqueta individual */
