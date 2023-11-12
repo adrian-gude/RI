@@ -17,16 +17,13 @@ import Rating from '@mui/material/Rating';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
-/*TODO: (PENDIENTE)
- - mejorar listado resultados:
-    - centrar bien las imágenes
-*/
 
 //TODO: (PENDIENTE pero no indispensable)
 /*
 - Intentar incluír un mapa con el nº de hoteles por comunidad
 */
 
+/* Se define una paginación personalizada para el componente ReactiveList */
 const CustomPagination = ({ setPage, currentPage, totalPages }) => {
   totalPages = totalPages - 1;
   //if (currentPage === 0) currentPage = 1;
@@ -96,7 +93,7 @@ class Main extends React.Component {
               marginTop: '2%',
             }}
           >
-            <div style={{marginBottom:'5%'}}>
+            <div className='lateralComponentsMargin'>
               <MultiDropdownList
                 componentId="comunidad_multidropselector"
                 compoundClause="filter"
@@ -108,11 +105,11 @@ class Main extends React.Component {
                 showFilter={true}  
                 react={{
                   and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider_input', 'puntuacion_ratingselector',
-                  'idiomas_multidropselector', 'servicios_multidropselector'],
+                  'n_opiniones_slider_input', 'idiomas_multidropselector', 'servicios_multidropselector'],
                 }} 
               />
             </div>
-            <div style={{marginBottom:'5%'}}>
+            <div className='lateralComponentsMargin'>
               <RangeInput
                 componentId="precio_slider_input"
                 dataField="precio"
@@ -129,31 +126,11 @@ class Main extends React.Component {
                 showFilter={true}
                 react={{
                   and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider_input', 'puntuacion_ratingselector',
-                  'idiomas_multidropselector', 'servicios_multidropselector'],
+                  'n_opiniones_slider_input', 'idiomas_multidropselector', 'servicios_multidropselector'],
                 }}
               />
             </div>
-            <div style={{marginBottom:'5%'}}>
-              <RatingsFilter
-                componentId="puntuacion_ratingselector"
-                dataField="puntuacion"
-                title="Valoración"
-                icon={<CircleIcon htmlColor="#0B6AFF" />}
-                dimmedIcon={<CircleIcon htmlColor='grey'/>}
-                data={[
-                  { start: 1, end: 5, label: '1 o más' },
-                  { start: 2, end: 5, label: '2 o más' },
-                  { start: 3, end: 5, label: '3 o más' },
-                  { start: 4, end: 5, label: '4 o más' },
-                  { start: 5, end: 5, label: '5' }
-                ]}
-                react={{
-                  and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider_input', 'puntuacion_ratingselector',
-                  'idiomas_multidropselector', 'servicios_multidropselector'],
-                }}
-              />
-            </div>
-            <div style={{marginBottom:'5%'}}>
+            <div className='lateralComponentsMargin'>
               <MultiRange
                 componentId="categoria_multiselector"
                 compoundClause="filter"
@@ -171,11 +148,52 @@ class Main extends React.Component {
                 showCheckbox={true}
                 react={{
                   and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider_input', 'puntuacion_ratingselector',
-                  'idiomas_multidropselector', 'servicios_multidropselector'],
+                  'n_opiniones_slider_input', 'idiomas_multidropselector', 'servicios_multidropselector'],
                 }}
               />
             </div>
-            <div style={{marginBottom:'5%'}}>
+            <div className='lateralComponentsMargin'>
+              <RatingsFilter
+                componentId="puntuacion_ratingselector"
+                dataField="puntuacion"
+                title="Valoración"
+                icon={<CircleIcon htmlColor="#0B6AFF" />}
+                dimmedIcon={<CircleIcon htmlColor='grey'/>}
+                data={[
+                  { start: 1, end: 5, label: '1 o más' },
+                  { start: 2, end: 5, label: '2 o más' },
+                  { start: 3, end: 5, label: '3 o más' },
+                  { start: 4, end: 5, label: '4 o más' },
+                  { start: 5, end: 5, label: '5' }
+                ]}
+                react={{
+                  and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider_input', 'puntuacion_ratingselector',
+                  'n_opiniones_slider_input', 'idiomas_multidropselector', 'servicios_multidropselector'],
+                }}
+              />
+            </div>
+            <div className='lateralComponentsMargin'>
+              <RangeInput
+                componentId="n_opiniones_slider_input"
+                dataField="n_opiniones"
+                title="Número de opiniones"
+                range={{
+                  start: 0,
+                  end: 20000,
+                }}
+                rangeLabels={{
+                  start: '0',
+                  end: '20000',
+                }}
+                showHistogram={false}
+                showFilter={true}
+                react={{
+                  and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider_input', 'puntuacion_ratingselector',
+                  'n_opiniones_slider_input', 'idiomas_multidropselector', 'servicios_multidropselector'],
+                }}
+              />
+            </div>
+            <div className='lateralComponentsMargin'>
               <MultiDropdownList
                 componentId="idiomas_multidropselector"
                 compoundClause="filter"
@@ -189,11 +207,11 @@ class Main extends React.Component {
                 queryFormat='and'
                 react={{
                   and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider_input', 'puntuacion_ratingselector',
-                  'idiomas_multidropselector', 'servicios_multidropselector'],
+                  'n_opiniones_slider_input', 'idiomas_multidropselector', 'servicios_multidropselector'],
                 }} 
               />
             </div>
-            <div style={{marginBottom:'5%'}}>
+            <div className='lateralComponentsMargin'>
               <MultiDropdownList
                 componentId="servicios_multidropselector"
                 compoundClause="filter"
@@ -207,7 +225,7 @@ class Main extends React.Component {
                 queryFormat='and'
                 react={{
                   and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider_input', 'puntuacion_ratingselector',
-                  'idiomas_multidropselector', 'servicios_multidropselector'],
+                  'n_opiniones_slider_input', 'idiomas_multidropselector', 'servicios_multidropselector'],
                 }}  
               />
             </div>
@@ -233,7 +251,7 @@ class Main extends React.Component {
                 //enablePredictiveSuggestions={true}
                 react={{
                   and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider_input', 'puntuacion_ratingselector',
-                  'idiomas_multidropselector', 'servicios_multidropselector'],
+                  'n_opiniones_slider_input', 'idiomas_multidropselector', 'servicios_multidropselector'],
                 }}
               />
             </div>
@@ -276,7 +294,7 @@ class Main extends React.Component {
               renderPagination={(props) => <CustomPagination {...props} />} //Paginación personalizada
               react={{
                 and: ['searchbox', 'comunidad_multidropselector', 'categoria_multiselector', 'precio_slider_input', 'puntuacion_ratingselector',
-                 'idiomas_multidropselector', 'servicios_multidropselector'],
+                'n_opiniones_slider_input', 'idiomas_multidropselector', 'servicios_multidropselector'],
               }}
               loader={<div>Cargando...</div>}
               showResultStats={true} //Para mostrar estadísticas de resultados
@@ -285,8 +303,8 @@ class Main extends React.Component {
                   {data.map(item => (
                     <div className='hotelWrapper'>
                       <ResultList key={item._id}>
-                        <div className='column-img'>
-                          <img src={item.imageUrl} className='result-image'/>
+                        <div className='column-image'>
+                          <img src={item.imageUrl}/>
                         </div>
                         <div className='column'>
                         <ResultList.Content>
@@ -306,13 +324,13 @@ class Main extends React.Component {
                           </ResultList.Title>
                           <ResultList.Description>
                             <div className='grid-container'>
-                              <div className='grid-container row'>
+                              <div className='grid-container subcolumn'>
                                 <div className='column'>
                                   <span>
                                     <Rating name="read-only" value={item.categoria} readOnly />
                                   </span>
                                 </div>
-                                <div className='column text-align-end'>
+                                <div className='column'>
                                   <span>
                                     {item.puntuacion} - {item.n_opiniones} opiniones
                                   </span>
