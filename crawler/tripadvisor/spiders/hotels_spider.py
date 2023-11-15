@@ -4,7 +4,6 @@ from scrapy.selector import Selector
 from scrapy.loader import ItemLoader
 from itemloaders.processors import TakeFirst
 import re
-import time
 import random
 
 MOSTRAR_WARNINGS = False
