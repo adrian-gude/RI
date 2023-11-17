@@ -29,69 +29,11 @@ Lista de comandos:
 
     - Para crear el índice:
         NOTA: es necesario tener elasticsearch ejecutandose.
-            (Se adjunta un archivo para importar a Postman todas las operaciones necesarias)
-        - Creación (Create Hotels): PUT a la dirección http://localhost:9200/hotels con los headers:
-            - Client-ID con valor j3wd479xdi210i2i6m5t5guvr9xm5ui
-            - Authorization con valor OAuth cjfpm7c9jzupzuh0q460kotm9jzw12p
-            - Accept con valor application/vnd.twitchtv.v3+json
-        - Configuración (Map columns - NGram): 
-            - PUT a la dirección http://localhost:9200/hotels/_mapping
-            - Headers: los mismos de la creación y añadiendo uno más:
-                - Content-Type con valor application/json
-            - Body:
-                {
-                    "properties": {
-                        "comunidad": {
-                            "type": "keyword",
-                            "index": "true"
-                        },
-
-                        "nombre": {
-                            "type": "text",
-                            "index": "true"
-                        },
-                        "precio": {
-                            "type": "integer",
-                            "index": "true"
-                        },
-                        "localizacion": {
-                            "type": "text",
-                            "index": "true"
-                        },
-                        "n_opiniones": {
-                            "type": "integer",
-                            "index": "true"
-                        },
-                        "puntuacion": {
-                            "type": "float",
-                            "index": "true"
-                        },
-                        "categoria": {
-                            "type": "integer",
-                            "index": "true"
-                        },
-                        "idiomas": {
-                            "type": "keyword",
-                            "index": "true"
-                        },
-                        "servicios": {
-                            "type": "keyword",
-                            "index": "true"
-                        },
-                        "url": {
-                            "type": "text",
-                            "index": "true"
-                        },
-                        "imageUrl": {
-                            "type": "text",
-                            "index": "true"
-                        }
-                    }
-                }
+        (Se adjunta un archivo para importar a Postman todas las operaciones necesarias)
+        - Creación (Create Hotels): PUT a la dirección http://localhost:9200/hotels
+        - Configuración (Map columns - NGram): PUT a la dirección http://localhost:9200/hotels/_mapping
         - Inserción de datos (Bulk Add Hotels):
             - PUT a la dirección http://localhost:9200/hotels/_bulk
-            - Headers: los mismos de la configuración
-            - Body: (el contido del JSON tras adaptar)
 
     - Para lanzar la aplicación:
         NOTA: es necesario tener elasticsearch ejecutandose.
@@ -101,10 +43,4 @@ Lista de comandos:
             - npm start
             NOTA: "npm install" solo será necesario la primera vez
         - Para visualizar la aplicación solo habrá que esperar a que se habrá una pestaña automaticamente, o por defecto acceder con un navegador web a "http://localhost:3000/"
-
-        
-            
-        
-
-Para el frontEnd :
 
