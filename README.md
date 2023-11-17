@@ -1,12 +1,12 @@
 # RI
 Repositorio para la práctica de RI de la asignatura RIWS. (Q1 MUEI año 23-24).
 
-Lista de comandos:
+    Lista de comandos:
     - Para extraer los datos usando el scrapy configurado:
         - Acceder a la carpeta "crawler"
         - Ejecutar el siguiente comando:
             scrapy crawl hotels -O hotels.json
-        NOTA: si deseas obtener información más detallada durante la ejecución de errores es necesario poner la variable "MOSTRAR_WARNINGS" del archivo "hotels_spyder.py" a TRUE.
+        NOTA: si deseas obtener información más detallada durante la ejecución de errores es necesario poner la variable "MOSTRAR_WARNINGS" del archivo     "hotels_spyder.py" a TRUE.
         - La salida se habrá guardado en un archivo con nombre "hotels.json"
 
     - Para construír un archivo válido para incluír en el índice:
