@@ -29,7 +29,7 @@ Repositorio para la práctica de RI de la asignatura RIWS. (Q1 MUEI año 23-24).
 
     - Para crear el índice:
         NOTA: es necesario tener elasticsearch ejecutandose.
-        (Se adjunta un archivo para importar a Postman todas las operaciones necesarias)
+        (Se adjunta un archivo para importar a Postman todas las operaciones necesarias en la carpeta DATA)
         - Creación (Create Hotels): PUT a la dirección http://localhost:9200/hotels
         - Configuración (Map columns - NGram): PUT a la dirección http://localhost:9200/hotels/_mapping
         - Inserción de datos (Bulk Add Hotels):
