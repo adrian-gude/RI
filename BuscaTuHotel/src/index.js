@@ -130,7 +130,7 @@ class Main extends React.Component {
                 }}
               />
             </div>
-            <div className='lateralComponentsMargin' style={{marginTop:"200px"}}>
+            <div className='lateralComponentsMargin'>
               <MultiRange
                 componentId="categoria_multiselector"
                 compoundClause="filter"
