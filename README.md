@@ -43,7 +43,7 @@ Repositorio para la práctica de RI de la asignatura RIWS. (Q1 MUEI año 23-24).
             - npm start
             NOTA: "npm install" solo será necesario la primera vez
         - Para visualizar la aplicación solo habrá que esperar a que se habrá una pestaña automaticamente, o por defecto acceder con un navegador web a "http://localhost:3000/"
-        - Si se experimentan problemas de seguridad, será necesario añadir las siguientes lineas al archivo elasticsearch.yml, (se adjunta el archivo elasticsearch.yml):
+        - Si se experimentan problemas de seguridad, será necesario añadir las siguientes lineas al archivo elasticsearch.yml, (se adjunta el archivo elasticsearch.yml en la carpeta DATA):
             -http.cors.enabled: true
             -http.cors.allow-origin: "*"
             -http.cors.allow-headers: "*"
